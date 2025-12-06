@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erik Sanchez | Portfolio</title>
+    <meta name="description" content="Portafolio web de Erik Sanchez - Desarrollador Web y Creativo.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">E.Sanchez</div>
+        <ul class="nav-links">
+            <li><a href="#home">Inicio</a></li>
+            <li><a href="#about">Sobre Mí</a></li>
+            <li><a href="#projects">Proyectos</a></li>
+            <li><a href="#contact">Contacto</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <header id="home" class="hero">
+        <div class="hero-content">
+            <span class="greeting">Hola, soy</span>
+            <h1>Erik Sanchez</h1>
+            <p class="subtitle">Desarrollador Web & <span class="highlight">Creativo Digital</span></p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn primary">Ver Proyectos</a>
+                <a href="#contact" class="btn secondary">Contáctame</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Sobre Mí</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>Soy un apasionado desarrollador web enfocado en crear experiencias digitales únicas y funcionales. Me especializo en transformar ideas en código limpio y eficiente, con un ojo agudo para el diseño y la usabilidad.</p>
+                    <p>Siempre estoy aprendiendo nuevas tecnologías para mantenerme a la vanguardia del desarrollo web.</p>
+                </div>
+                <div class="skills-card">
+                    <h3>Habilidades</h3>
+                    <div class="tags">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>Git</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Mis Proyectos</h2>
+            <div class="project-grid">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="placeholder-img">Proyect 1</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>E-Commerce Dashboard</h3>
+                        <p>Panel de administración para gestión de inventarios y ventas en tiempo real.</p>
+                        <div class="tech-stack">
+                            <i class="fab fa-js"></i>
+                            <i class="fab fa-css3"></i>
+                        </div>
+                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <!-- Project 2 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="placeholder-img">Proyect 2</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>App de Finanzas</h3>
+                        <p>Aplicación web para seguimiento de gastos personales y visualización de datos.</p>
+                        <div class="tech-stack">
+                            <i class="fab fa-react"></i>
+                            <i class="fab fa-node"></i>
+                        </div>
+                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="placeholder-img">Proyect 3</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Landing Page Corporativa</h3>
+                        <p>Diseño moderno y responsivo para una startup tecnológica.</p>
+                        <div class="tech-stack">
+                            <i class="fab fa-html5"></i>
+                            <i class="fab fa-sass"></i>
+                        </div>
+                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>¡Hablemos!</h3>
+                    <p>¿Tienes un proyecto en mente? Estoy disponible para colaborar.</p>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:sanchezeri836@gmail.com">sanchezeri836@gmail.com</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <input type="text" placeholder="Nombre" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea rows="5" placeholder="Mensaje" required></textarea>
+                    <button type="submit" class="btn primary">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Erik Sanchez. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
