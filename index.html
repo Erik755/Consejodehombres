@@ -1050,6 +1050,151 @@
                 display: none;
             }
         }
+
+        /* ================================
+           RESPONSIVE - MOBILE
+        ================================ */
+
+        /* Tablets and smaller */
+        @media (max-width: 1024px) {
+            .instructions-panel {
+                display: none !important;
+            }
+        }
+
+        /* Mobile phones */
+        @media (max-width: 768px) {
+
+            /* Libro cerrado más pequeño */
+            .book-closed {
+                width: 300px;
+                min-height: 450px;
+                border-left-width: 12px;
+            }
+
+            .book-closed .corner {
+                width: 35px;
+                height: 35px;
+            }
+
+            .book-closed .ornament-frame {
+                inset: 20px;
+            }
+
+            .clasp {
+                width: 40px;
+                height: 28px;
+            }
+
+            .clasp-container {
+                right: -22px;
+            }
+
+            /* Libro abierto */
+            .book-open {
+                max-width: 100%;
+                aspect-ratio: auto;
+                flex-direction: column;
+                max-height: none;
+                min-height: 80vh;
+            }
+
+            .book-page.left {
+                display: none;
+            }
+
+            .book-page.right {
+                width: 100%;
+                min-height: 75vh;
+                padding: var(--space-md);
+            }
+
+            .book-spine {
+                display: none;
+            }
+
+            /* Navegación */
+            .nav-button {
+                width: 36px;
+                height: 36px;
+            }
+
+            .page-search {
+                padding: 4px 8px;
+            }
+
+            .page-search input {
+                width: 70px;
+                font-size: 0.6rem;
+            }
+
+            /* Modales */
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: 10px;
+                padding: var(--space-md);
+                max-height: 90vh;
+            }
+
+            /* Textos */
+            .commandment-item {
+                padding: var(--space-sm);
+            }
+
+            .commandment-number {
+                width: 24px;
+                height: 24px;
+                font-size: 0.75rem;
+            }
+
+            /* Botón de cerrar */
+            .close-book-btn {
+                width: 35px;
+                height: 35px;
+            }
+
+            /* Editor de página */
+            .editor-textarea {
+                min-height: 100px;
+            }
+
+            /* Ocultar elementos decorativos */
+            .page-ornament {
+                display: none;
+            }
+        }
+
+        /* Teléfonos muy pequeños */
+        @media (max-width: 480px) {
+            .book-closed {
+                width: 260px;
+                min-height: 380px;
+            }
+
+            .book-closed h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .book-page.right {
+                padding: var(--space-sm);
+            }
+
+            .oath-button {
+                font-size: 0.8rem;
+                padding: var(--space-sm) var(--space-md);
+            }
+
+            .nav-button {
+                width: 32px;
+                height: 32px;
+            }
+
+            /* Reducer espacio en mandamientos */
+            .commandment-item p {
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
