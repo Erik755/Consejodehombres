@@ -85,6 +85,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Allow selection only in inputs */
+        input,
+        textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-drag: none;
         }
 
         html,
@@ -3781,6 +3801,115 @@
         // Mount React App
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+
+        // ================================
+        // SECURITY PROTECTIONS
+        // ================================
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable text selection
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable drag and drop
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable copy/cut/paste
+        document.addEventListener('copy', function (e) {
+            e.preventDefault();
+            return false;
+        });
+        document.addEventListener('cut', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable developer tools keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+I (Inspector)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+S (Save)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+P (Print)
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+C (Inspect element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Detect DevTools opening (basic detection)
+        let devToolsOpen = false;
+        const threshold = 160;
+
+        const checkDevTools = () => {
+            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+            if (widthThreshold || heightThreshold) {
+                if (!devToolsOpen) {
+                    devToolsOpen = true;
+                    console.clear();
+                    console.log('%c⚠️ ACCESO NO AUTORIZADO ⚠️', 'color: red; font-size: 30px; font-weight: bold;');
+                    console.log('%cEl uso de herramientas de desarrollador está siendo monitoreado.', 'color: orange; font-size: 16px;');
+                    console.log('%cTodas las acciones son registradas.', 'color: orange; font-size: 16px;');
+                }
+            } else {
+                devToolsOpen = false;
+            }
+        };
+
+        setInterval(checkDevTools, 1000);
+
+        // Clear console periodically
+        setInterval(() => {
+            console.clear();
+        }, 5000);
+
+        // Disable printing
+        window.addEventListener('beforeprint', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Protection message
+        console.log('%c🛡️ CÓDICE PROTEGIDO 🛡️', 'color: gold; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px black;');
+        console.log('%cEste contenido está protegido por el Consejo de Hombres.', 'color: #d4af37; font-size: 14px;');
     </script>
 </body>
 
