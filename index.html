@@ -1,149 +1,3496 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erik Sanchez | Portfolio</title>
-    <meta name="description" content="Portafolio web de Erik Sanchez - Desarrollador Web y Creativo.">
-    <link rel="stylesheet" href="styles.css">
+    <title>Codex Ursus | El Consejo de Hombres</title>
+    <meta name="description"
+        content="Libro sagrado digital con mandamientos y sabiduría antigua del Consejo de Hombres.">
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Google Fonts - Medieval Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&family=MedievalSharp&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* ================================
+           CSS VARIABLES / DESIGN TOKENS
+        ================================ */
+        :root {
+            /* Colors - Medieval Gold/Cream Palette */
+            --gold-light: #fbf5b7;
+            --gold-primary: #d4af37;
+            --gold-dark: #b38728;
+            --gold-darker: #956c2c;
+            --cream: #fdfbf7;
+            --cream-dark: #f5f0e6;
+            --parchment: #f4e4bc;
+            --brown-dark: #3e2723;
+            --brown-medium: #5d4037;
+            --brown-light: #8d6e63;
+            --background: #0f0f0f;
+            --success: #2e7d32;
+            --error: #c62828;
+
+            /* Shadows */
+            --shadow-book: 0 20px 60px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.4);
+            --shadow-gold: 0 0 30px rgba(212, 175, 55, 0.3);
+            --shadow-inset: inset 0 0 100px rgba(139, 69, 19, 0.15);
+
+            /* Typography */
+            --font-display: 'Cinzel Decorative', serif;
+            --font-medieval: 'MedievalSharp', cursive;
+            --font-uncial: 'Uncial Antiqua', cursive;
+            --font-body: 'EB Garamond', serif;
+
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+            --radius-book: 0 12px 12px 0;
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-medium: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ================================
+           RESET & BASE STYLES
+        ================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: #0a0a0a;
+            color: var(--brown-dark);
+            line-height: 1.6;
+        }
+
+        /* Fondo místico con civilizaciones */
+        .mystic-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at center, #1a1510 0%, #0a0808 50%, #050404 100%);
+        }
+
+        .mystic-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                url('https://images.unsplash.com/photo-1531722569936-825d3dd91b15?w=400&q=30'),
+                url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=30'),
+                url('https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400&q=30'),
+                url('https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?w=400&q=30'),
+                url('https://images.unsplash.com/photo-1569230516306-5a8cb5586399?w=400&q=30');
+            background-position:
+                0% 20%,
+                100% 0%,
+                0% 80%,
+                100% 100%,
+                50% 50%;
+            background-size: 35% auto, 30% auto, 35% auto, 30% auto, 40% auto;
+            background-repeat: no-repeat;
+            opacity: 0.12;
+            filter: grayscale(50%) contrast(1.2);
+        }
+
+        .mystic-background::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(139, 90, 43, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(100, 60, 30, 0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(40, 25, 15, 0.9) 0%, transparent 70%);
+        }
+
+        /* Marca de agua */
+        .watermark {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .watermark::before {
+            content: 'LO QUE AQUÍ SE ESCRIBA, NO PODRÁ SER BORRADO NUNCA. SÉ CAUTELOSO. • LO QUE AQUÍ SE ESCRIBA, NO PODRÁ SER BORRADO NUNCA. SÉ CAUTELOSO. •';
+            position: absolute;
+            white-space: nowrap;
+            font-family: var(--font-uncial);
+            font-size: 1.2rem;
+            color: rgba(212, 175, 55, 0.06);
+            letter-spacing: 8px;
+            transform: rotate(-25deg);
+            animation: watermark-scroll 60s linear infinite;
+        }
+
+        .watermark::after {
+            content: 'SÉ CAUTELOSO • LO QUE AQUÍ SE ESCRIBA, NO PODRÁ SER BORRADO NUNCA • SÉ CAUTELOSO • LO QUE AQUÍ SE ESCRIBA, NO PODRÁ SER BORRADO NUNCA •';
+            position: absolute;
+            white-space: nowrap;
+            font-family: var(--font-uncial);
+            font-size: 1rem;
+            color: rgba(212, 175, 55, 0.04);
+            letter-spacing: 6px;
+            transform: rotate(25deg) translateY(100px);
+            animation: watermark-scroll-reverse 80s linear infinite;
+        }
+
+        @keyframes watermark-scroll {
+            from {
+                transform: rotate(-25deg) translateX(-20%);
+            }
+
+            to {
+                transform: rotate(-25deg) translateX(20%);
+            }
+        }
+
+        @keyframes watermark-scroll-reverse {
+            from {
+                transform: rotate(25deg) translateY(100px) translateX(20%);
+            }
+
+            to {
+                transform: rotate(25deg) translateY(100px) translateX(-20%);
+            }
+        }
+
+        /* ================================
+           UTILITY CLASSES
+        ================================ */
+        .gold-gradient-text {
+            background: linear-gradient(to bottom,
+                    var(--gold-light) 0%,
+                    var(--gold-primary) 40%,
+                    var(--gold-dark) 60%,
+                    var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .paper-texture {
+            background-color: var(--cream);
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            box-shadow: var(--shadow-inset), var(--shadow-book);
+        }
+
+        .gold-border {
+            border: 3px solid var(--gold-dark);
+            border-image: linear-gradient(to bottom,
+                    var(--gold-light),
+                    var(--gold-primary),
+                    var(--gold-dark),
+                    var(--gold-light)) 1;
+        }
+
+        /* ================================
+           ANIMATIONS
+        ================================ */
+        @keyframes bookOpen {
+            0% {
+                transform: perspective(1500px) rotateY(-90deg) scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: perspective(1500px) rotateY(0deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translateX(-2px);
+            }
+
+            20%,
+            80% {
+                transform: translateX(4px);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translateX(-6px);
+            }
+
+            40%,
+            60% {
+                transform: translateX(6px);
+            }
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes turnPage {
+            0% {
+                transform: rotateY(0deg);
+            }
+
+            50% {
+                transform: rotateY(-90deg);
+            }
+
+            100% {
+                transform: rotateY(0deg);
+            }
+        }
+
+        .book-enter {
+            animation: bookOpen 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+
+        /* ================================
+           COMPONENT STYLES
+        ================================ */
+
+        /* Closed Book Cover - Antique Leather Texture */
+        .book-closed {
+            width: 420px;
+            min-height: 620px;
+            background: linear-gradient(145deg, #5c3d2e 0%, #3d2517 40%, #2a1810 100%);
+            border-radius: 6px 14px 14px 6px;
+            border-left: 18px solid #1a0f0a;
+            position: relative;
+            cursor: pointer;
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+            box-shadow:
+                var(--shadow-book),
+                0 0 50px rgba(212, 175, 55, 0.25),
+                inset 0 0 80px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Aged leather texture */
+        .book-closed::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E"),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+            opacity: 1;
+        }
+
+        /* Leather grain effect */
+        .book-closed::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background:
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 6px);
+            pointer-events: none;
+        }
+
+        .book-closed:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow:
+                0 35px 90px rgba(0, 0, 0, 0.8),
+                0 0 60px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Golden corners */
+        .book-closed .corner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary), var(--gold-dark));
+            z-index: 5;
+        }
+
+        .book-closed .corner-tl {
+            top: 0;
+            left: 0;
+            border-radius: 8px 0 20px 0;
+        }
+
+        .book-closed .corner-tr {
+            top: 0;
+            right: 0;
+            border-radius: 0 16px 0 20px;
+        }
+
+        .book-closed .corner-bl {
+            bottom: 0;
+            left: 0;
+            border-radius: 0 20px 0 8px;
+        }
+
+        .book-closed .corner-br {
+            bottom: 0;
+            right: 0;
+            border-radius: 20px 0 16px 0;
+        }
+
+        .book-closed .ornament-frame {
+            position: absolute;
+            inset: 30px;
+            border: 3px solid var(--gold-dark);
+            border-radius: var(--radius-sm);
+            opacity: 0.6;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .book-closed .ornament-frame::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--radius-sm);
+        }
+
+        /* Side Clasp/Brooch */
+        .clasp-container {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .clasp {
+            width: 55px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 40%, var(--gold-dark) 100%);
+            border-radius: 0 12px 12px 0;
+            border: 3px solid var(--gold-darker);
+            border-left: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                3px 3px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .clasp:hover {
+            transform: translateX(5px);
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                5px 5px 15px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .clasp-gem {
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b, #7b1c1c);
+            border-radius: 50%;
+            border: 2px solid var(--gold-darker);
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Page Search */
+        .page-search {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 10px;
+            border-radius: 16px;
+            border: 1px solid var(--gold-dark);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-search input {
+            width: 90px;
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            text-align: center;
+            outline: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .page-search input::-webkit-outer-spin-button,
+        .page-search input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        .page-search input::placeholder {
+            color: var(--brown-light);
+            font-size: 0.6rem;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gold-dark);
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: color 0.2s;
+        }
+
+        .search-btn:hover {
+            color: var(--gold-darker);
+        }
+
+        /* Close Book Button */
+        .close-book-btn {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown-medium));
+            border: 2px solid var(--gold-dark);
+            color: var(--gold-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 20;
+        }
+
+        .close-book-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Open Book */
+        .book-open {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16 / 10;
+            max-height: 85vh;
+            display: flex;
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            transform: translateX(-50%);
+            background: linear-gradient(to right,
+                    rgba(139, 69, 19, 0.2) 0%,
+                    rgba(245, 240, 230, 0.8) 20%,
+                    rgba(255, 255, 255, 0.9) 50%,
+                    rgba(245, 240, 230, 0.8) 80%,
+                    rgba(139, 69, 19, 0.2) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .book-page {
+            flex: 1;
+            padding: var(--space-xl);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .book-page.left {
+            border-right: 1px solid rgba(139, 69, 19, 0.1);
+        }
+
+        .book-page.right {
+            background: linear-gradient(to right, rgba(255, 250, 240, 0.5), transparent);
+        }
+
+        .page-ornament {
+            position: absolute;
+            inset: var(--space-md);
+            border: 2px double rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-sm);
+            pointer-events: none;
+        }
+
+        /* Navigation Buttons - Arrow Style */
+        .nav-button {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+            border: 2px solid var(--gold-dark);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(179, 135, 40, 0.25));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--brown-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: scale(1.15);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            color: var(--brown-dark);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        /* Commandments List */
+        .commandment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .commandment-number {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+        }
+
+        .locked-slot {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 1px dashed rgba(139, 69, 19, 0.2);
+        }
+
+        .locked-slot:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-dark);
+        }
+
+        /* Oath Button */
+        .oath-button {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown-medium));
+            color: var(--gold-light);
+            border: 2px solid var(--gold-dark);
+            border-radius: var(--radius-md);
+            font-family: var(--font-medieval);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .oath-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .oath-accepted {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Wisdom Quote */
+        .wisdom-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: var(--space-xl);
+            padding: var(--space-xl);
+        }
+
+        .wisdom-quote {
+            font-size: 1.6rem;
+            font-style: italic;
+            color: var(--brown-dark);
+            line-height: 1.8;
+            max-width: 500px;
+        }
+
+        .wisdom-author {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--gold-darker);
+            font-weight: 600;
+        }
+
+        .wisdom-divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+        }
+
+        /* Page Editor */
+        .editor-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: var(--space-md);
+            border: 2px dashed rgba(139, 69, 19, 0.3);
+            border-radius: var(--radius-md);
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            resize: vertical;
+            transition: border-color var(--transition-fast);
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            border-style: solid;
+        }
+
+        .video-input {
+            width: 100%;
+            padding: var(--space-md);
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            border-radius: var(--radius-md);
+            background: white;
+            font-family: inherit;
+        }
+
+        .save-button {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-darker));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-medieval);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .save-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(179, 135, 40, 0.4);
+        }
+
+        .save-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--cream);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            border: 4px solid var(--gold-dark);
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: var(--shadow-book), var(--shadow-gold);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 1.1rem;
+            margin: var(--space-lg) 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-family: var(--font-medieval);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-cancel {
+            background: #ddd;
+            border: none;
+            color: var(--brown-dark);
+        }
+
+        .modal-confirm {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-darker));
+            border: none;
+            color: white;
+        }
+
+        /* Video Embed */
+        .video-container {
+            margin-top: var(--space-lg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--brown-dark);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: none;
+        }
+
+        .video-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            color: var(--gold-light);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .video-link:hover {
+            color: white;
+        }
+
+        /* Page Number */
+        .page-number {
+            position: absolute;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-display);
+            color: var(--brown-light);
+            font-size: 0.9rem;
+        }
+
+        /* Scrollbar Styling */
+        .book-page::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .book-page::-webkit-scrollbar-track {
+            background: rgba(139, 69, 19, 0.05);
+            border-radius: 4px;
+        }
+
+        .book-page::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 4px;
+        }
+
+        .book-page::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.6);
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .book-closed {
+                width: 280px;
+                min-height: 420px;
+            }
+
+            .book-closed h1 {
+                font-size: 2rem !important;
+            }
+
+            .clasp-container {
+                right: -25px;
+            }
+
+            .clasp {
+                width: 45px;
+                height: 28px;
+            }
+
+            .book-open {
+                flex-direction: column;
+                aspect-ratio: auto;
+                max-height: none;
+                height: calc(100vh - 32px);
+                border-radius: var(--radius-md);
+            }
+
+            .book-page.left {
+                display: none;
+            }
+
+            .book-spine {
+                display: none;
+            }
+
+            .book-page {
+                padding: var(--space-md);
+                border-radius: var(--radius-md);
+            }
+
+            .page-ornament {
+                inset: var(--space-xs);
+            }
+
+            .wisdom-quote {
+                font-size: 1.2rem;
+            }
+
+            .wisdom-author {
+                font-size: 1rem;
+            }
+
+            .nav-button {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .page-search {
+                padding: 4px 8px;
+            }
+
+            .page-search input {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+
+            .commandment-number {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                font-size: 0.8rem;
+            }
+
+            .editor-textarea {
+                min-height: 100px;
+            }
+
+            .modal-content {
+                width: 90%;
+                max-width: 340px;
+                padding: var(--space-lg);
+            }
+
+            h2 {
+                font-size: 1.3rem !important;
+            }
+        }
+
+        /* Responsive - Small Mobile */
+        @media (max-width: 480px) {
+            .book-closed {
+                width: 240px;
+                min-height: 360px;
+            }
+
+            .corner {
+                width: 35px !important;
+                height: 35px !important;
+            }
+
+            .page-search {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="logo">E.Sanchez</div>
-        <ul class="nav-links">
-            <li><a href="#home">Inicio</a></li>
-            <li><a href="#about">Sobre Mí</a></li>
-            <li><a href="#projects">Proyectos</a></li>
-            <li><a href="#contact">Contacto</a></li>
-        </ul>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
-        </div>
-    </nav>
+    <div id="root"></div>
 
-    <header id="home" class="hero">
-        <div class="hero-content">
-            <span class="greeting">Hola, soy</span>
-            <h1>Erik Sanchez</h1>
-            <p class="subtitle">Desarrollador Web & <span class="highlight">Creativo Digital</span></p>
-            <div class="cta-buttons">
-                <a href="#projects" class="btn primary">Ver Proyectos</a>
-                <a href="#contact" class="btn secondary">Contáctame</a>
-            </div>
-        </div>
-    </header>
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
 
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Sobre Mí</h2>
-            <div class="about-grid">
-                <div class="about-text">
-                    <p>Soy un apasionado desarrollador web enfocado en crear experiencias digitales únicas y funcionales. Me especializo en transformar ideas en código limpio y eficiente, con un ojo agudo para el diseño y la usabilidad.</p>
-                    <p>Siempre estoy aprendiendo nuevas tecnologías para mantenerme a la vanguardia del desarrollo web.</p>
-                </div>
-                <div class="skills-card">
-                    <h3>Habilidades</h3>
-                    <div class="tags">
-                        <span>HTML5</span>
-                        <span>CSS3</span>
-                        <span>JavaScript</span>
-                        <span>React</span>
-                        <span>Node.js</span>
-                        <span>Git</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        // ================================
+        // DATA
+        // ================================
+        const COMMANDMENTS = [
+            "Serás leal a tus hermanos por encima de todo.",
+            "Tu palabra es tu contrato; no la rompas.",
+            "Protegerás al débil y honrarás al valiente.",
+            "La disciplina es la llave de la libertad.",
+            "No denigrarás; construirás.",
+            "Domina tus emociones, no seas su esclavo.",
+            "Busca la sabiduría antes que el oro."
+        ];
 
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Mis Proyectos</h2>
-            <div class="project-grid">
-                <!-- Project 1 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="placeholder-img">Proyect 1</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>E-Commerce Dashboard</h3>
-                        <p>Panel de administración para gestión de inventarios y ventas en tiempo real.</p>
-                        <div class="tech-stack">
-                            <i class="fab fa-js"></i>
-                            <i class="fab fa-css3"></i>
+        const LOCKED_COMMANDMENTS = {
+            8: "La fortaleza interior supera la fuerza física.",
+            9: "El silencio estratégico es más poderoso que mil palabras.",
+            10: "Enfrenta tus miedos; ahí reside tu verdadero poder.",
+            11: "El legado se construye con acciones, no con intenciones.",
+            12: "Unidos somos invencibles; divididos caeremos."
+        };
+
+        const WISDOM_QUOTES = [
+            { quote: "La dicha de tu vida depende de la calidad de tus pensamientos.", author: "Marco Aurelio" },
+            { quote: "No es que tengamos poco tiempo, es que perdemos mucho.", author: "Séneca" },
+            { quote: "Aquel que tiene un porqué para vivir se puede enfrentar a todos los cómos.", author: "Nietzsche" },
+            { quote: "Conócete a ti mismo.", author: "Sócrates" },
+            { quote: "El hombre valiente no es el que no siente miedo, sino aquel que lo conquista.", author: "Nelson Mandela" },
+            { quote: "Lo que no te mata, te hace más fuerte.", author: "Nietzsche" },
+            { quote: "La mejor venganza es no ser como tu enemigo.", author: "Marco Aurelio" },
+            { quote: "El único bien verdadero es el conocimiento; el único mal verdadero es la ignorancia.", author: "Sócrates" },
+            { quote: "La paciencia es amarga, pero su fruto es dulce.", author: "Aristóteles" },
+            { quote: "Somos lo que hacemos repetidamente. La excelencia, entonces, no es un acto, sino un hábito.", author: "Aristóteles" }
+        ];
+
+        const PASSWORD = "OCI";
+
+        // ================================
+        // ICONS - Using Lucide
+        // ================================
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const iconRef = React.useRef(null);
+
+            useEffect(() => {
+                if (iconRef.current && lucide.icons[name]) {
+                    iconRef.current.innerHTML = '';
+                    const svg = lucide.icons[name].toString();
+                    iconRef.current.innerHTML = svg;
+                    const svgElement = iconRef.current.querySelector('svg');
+                    if (svgElement) {
+                        svgElement.setAttribute('width', size);
+                        svgElement.setAttribute('height', size);
+                    }
+                }
+            }, [name, size]);
+
+            return <span ref={iconRef} className={className} style={{ display: 'inline-flex' }}></span>;
+        };
+
+        // ================================
+        // LOCAL STORAGE HELPERS
+        // ================================
+        const STORAGE_KEY = 'codex_ursus_data';
+
+        const saveToStorage = (data) => {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.warn('Could not save to localStorage:', e);
+            }
+        };
+
+        const loadFromStorage = () => {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : { pages: {}, unlockedSlots: {} };
+            } catch (e) {
+                console.warn('Could not load from localStorage:', e);
+                return { pages: {}, unlockedSlots: {} };
+            }
+        };
+
+        // ================================
+        // REPORTS STORAGE
+        // ================================
+        const REPORTS_STORAGE_KEY = 'codex_ursus_reports';
+        const REPORTS_PASSWORD = "OSOICO";
+
+        const saveReports = (reports) => {
+            try {
+                localStorage.setItem(REPORTS_STORAGE_KEY, JSON.stringify(reports));
+            } catch (e) {
+                console.warn('Could not save reports:', e);
+            }
+        };
+
+        const loadReports = () => {
+            try {
+                const data = localStorage.getItem(REPORTS_STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        };
+
+        // Book Cover Component with Instructions
+        function BookCover({ onOpen }) {
+            const [reportPage, setReportPage] = useState('');
+            const [showReportModal, setShowReportModal] = useState(false);
+            const [reportPassword, setReportPassword] = useState('');
+            const [reportError, setReportError] = useState(false);
+            const [reports, setReports] = useState(() => loadReports());
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+            const handleSubmitReport = () => {
+                if (reportPage.trim() && parseInt(reportPage) >= 12) {
+                    const newReports = [...reports, {
+                        page: parseInt(reportPage),
+                        date: new Date().toLocaleDateString('es-MX'),
+                        time: new Date().toLocaleTimeString('es-MX')
+                    }];
+                    setReports(newReports);
+                    saveReports(newReports);
+                    setReportPage('');
+                    alert('Reporte enviado al Alto Mando. Gracias por tu vigilancia.');
+                }
+            };
+
+            const handleViewReports = () => {
+                setShowReportModal(true);
+                setIsAuthenticated(false);
+                setReportPassword('');
+            };
+
+            const handleAuthenticate = () => {
+                if (reportPassword === REPORTS_PASSWORD) {
+                    setIsAuthenticated(true);
+                    setReportError(false);
+                } else {
+                    setReportError(true);
+                    setTimeout(() => setReportError(false), 500);
+                }
+            };
+
+            const handleDeleteReport = (index) => {
+                const newReports = reports.filter((_, i) => i !== index);
+                setReports(newReports);
+                saveReports(newReports);
+            };
+
+            const handleClearAllReports = () => {
+                setReports([]);
+                saveReports([]);
+            };
+
+            return (
+                <div
+                    style={{
+                        height: '100vh',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        padding: '20px'
+                    }}
+                >
+                    {/* Fondo místico */}
+                    <div className="mystic-background"></div>
+                    {/* Marca de agua */}
+                    <div className="watermark"></div>
+
+                    {/* Panel de Instrucciones - Lado Izquierdo (posición fija) */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '20px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            zIndex: 2,
+                            maxWidth: '300px',
+                            maxHeight: '85vh',
+                            overflowY: 'auto',
+                            padding: 'var(--space-md)',
+                            background: 'linear-gradient(135deg, rgba(30, 20, 15, 0.95), rgba(50, 35, 25, 0.9))',
+                            borderRadius: 'var(--radius-lg)',
+                            border: '2px solid var(--gold-dark)',
+                            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2)'
+                        }}
+                        className="instructions-panel"
+                    >
+                        <h2 style={{
+                            fontFamily: 'var(--font-display)',
+                            color: 'var(--gold-primary)',
+                            fontSize: '1.2rem',
+                            textAlign: 'center',
+                            marginBottom: 'var(--space-md)',
+                            borderBottom: '1px solid var(--gold-dark)',
+                            paddingBottom: 'var(--space-sm)'
+                        }}>
+                            📜 Instrucciones del Códice
+                        </h2>
+
+                        <div style={{
+                            fontSize: '0.78rem',
+                            color: 'var(--gold-light)',
+                            lineHeight: 1.6,
+                            fontFamily: 'var(--font-body)'
+                        }}>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>⚔️ Activación:</strong> Golpea el broche ancestral. (Presiona el broche para abrir el códice).
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>📖 Juramento:</strong> Lee con atención El Mandamiento Fundacional (Página I) y jura honor y respeto para que el códice te permita avanzar.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>🔍 La Búsqueda:</strong> Navega a través de la sabiduría de los Antiguos Lores y de la Hermandad (o utiliza el Buscador de Páginas).
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>✍️ Tu Sello:</strong> Inscribe tu Nombre de Guerrero (o Alias). Comparte tu Ley o tu Enseñanza en el espacio de Sabiduría.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>🎬 El Testimonio Digital:</strong> Si posees un testimonio visual (video), plasma el enlace de tu obra.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>🖼️ La Insignia:</strong> (Opcional) Añade tu insignia visual (foto) para que tu legado sea recordado.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>🤝 Camaradería:</strong> Honra las palabras de los hermanos. La crítica constructiva es bienvenida; el denuesto, jamás.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)', color: '#ff9999' }}>
+                                <strong style={{ color: '#ff6666' }}>⚠️ Vigilancia:</strong> El Codex no es un foso de ofensa. Contenido que menoscabe la dignidad será denunciado y retirado.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>🔒 La Ley Inmutable:</strong> Los espacios reservados (Mandamientos del 8 en adelante) son territorio sagrado del Alto Consejo.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-md)' }}>
+                                <strong style={{ color: 'var(--gold-primary)' }}>📢 El Legado Audaz:</strong> Los Ediles emitirán comunicados compartiendo la sabiduría del Codex.
+                            </p>
+
+                            <p style={{
+                                textAlign: 'center',
+                                fontFamily: 'var(--font-medieval)',
+                                color: 'var(--gold-primary)',
+                                fontSize: '0.85rem',
+                                marginBottom: 'var(--space-md)'
+                            }}>
+                                ✦ El Consejo observa. El Consejo honra. ✦
+                            </p>
+
+                            {/* Sistema de Reportes */}
+                            <div style={{
+                                borderTop: '1px solid var(--gold-dark)',
+                                paddingTop: 'var(--space-md)',
+                                marginTop: 'var(--space-sm)'
+                            }}>
+                                <p style={{ fontSize: '0.75rem', marginBottom: 'var(--space-sm)', color: '#ff9999' }}>
+                                    Si detectas una mancha en el honor, reporta la página:
+                                </p>
+                                <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-sm)' }}>
+                                    <input
+                                        type="number"
+                                        placeholder="# página"
+                                        value={reportPage}
+                                        onChange={(e) => setReportPage(e.target.value)}
+                                        min="12"
+                                        style={{
+                                            flex: 1,
+                                            padding: '8px',
+                                            borderRadius: '4px',
+                                            border: '1px solid var(--gold-dark)',
+                                            background: 'rgba(255,255,255,0.1)',
+                                            color: 'white',
+                                            fontSize: '0.8rem'
+                                        }}
+                                    />
+                                    <button
+                                        onClick={handleSubmitReport}
+                                        disabled={!reportPage.trim() || parseInt(reportPage) < 12}
+                                        style={{
+                                            padding: '8px 12px',
+                                            background: 'linear-gradient(135deg, #c62828, #8B0000)',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '0.75rem',
+                                            fontFamily: 'var(--font-medieval)',
+                                            opacity: (!reportPage.trim() || parseInt(reportPage) < 12) ? 0.5 : 1
+                                        }}
+                                    >
+                                        Reportar
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={handleViewReports}
+                                    style={{
+                                        width: '100%',
+                                        padding: '8px',
+                                        background: 'linear-gradient(135deg, var(--brown-dark), var(--brown-medium))',
+                                        color: 'var(--gold-light)',
+                                        border: '1px solid var(--gold-dark)',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontSize: '0.75rem',
+                                        fontFamily: 'var(--font-medieval)'
+                                    }}
+                                >
+                                    🔐 Revisar Reportes del Códice ({reports.length})
+                                </button>
+                            </div>
                         </div>
-                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
                     </div>
-                </article>
-                <!-- Project 2 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="placeholder-img">Proyect 2</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>App de Finanzas</h3>
-                        <p>Aplicación web para seguimiento de gastos personales y visualización de datos.</p>
-                        <div class="tech-stack">
-                            <i class="fab fa-react"></i>
-                            <i class="fab fa-node"></i>
-                        </div>
-                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-                <!-- Project 3 -->
-                <article class="project-card">
-                    <div class="project-image">
-                        <div class="placeholder-img">Proyect 3</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Landing Page Corporativa</h3>
-                        <p>Diseño moderno y responsivo para una startup tecnológica.</p>
-                        <div class="tech-stack">
-                            <i class="fab fa-html5"></i>
-                            <i class="fab fa-sass"></i>
-                        </div>
-                        <a href="#" class="link">Ver Demo <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
 
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Contacto</h2>
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <h3>¡Hablemos!</h3>
-                    <p>¿Tienes un proyecto en mente? Estoy disponible para colaborar.</p>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:sanchezeri836@gmail.com">sanchezeri836@gmail.com</a>
+                    {/* Libro Cerrado */}
+                    <div
+                        className="book-closed"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => e.key === 'Enter' && onOpen()}
+                        style={{ position: 'relative', zIndex: 2 }}
+                    >
+                        {/* Golden Corners */}
+                        <div className="corner corner-tl"></div>
+                        <div className="corner corner-tr"></div>
+                        <div className="corner corner-bl"></div>
+                        <div className="corner corner-br"></div>
+
+                        <div className="ornament-frame"></div>
+
+                        {/* Side Clasps/Brooch */}
+                        <div className="clasp-container" onClick={onOpen}>
+                            <div className="clasp pulse-glow">
+                                <div className="clasp-gem"></div>
+                            </div>
+                            <div className="clasp pulse-glow" style={{ animationDelay: '0.3s' }}>
+                                <div className="clasp-gem"></div>
+                            </div>
+                            <div className="clasp pulse-glow" style={{ animationDelay: '0.6s' }}>
+                                <div className="clasp-gem"></div>
+                            </div>
+                        </div>
+
+                        <div style={{
+                            position: 'relative',
+                            zIndex: 1,
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '40px 30px'
+                        }}>
+                            <h1
+                                className="gold-gradient-text"
+                                style={{
+                                    fontFamily: 'var(--font-uncial)',
+                                    fontSize: '2.6rem',
+                                    textAlign: 'center',
+                                    letterSpacing: '4px',
+                                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+                                }}
+                            >
+                                CODEX URSUS
+                            </h1>
+
+                            <div style={{
+                                width: '100px',
+                                height: '2px',
+                                background: 'linear-gradient(to right, transparent, var(--gold-primary), transparent)',
+                                margin: '20px 0'
+                            }}></div>
+
+                            <p style={{
+                                fontFamily: 'var(--font-uncial)',
+                                fontSize: '0.95rem',
+                                color: 'var(--gold-light)',
+                                textAlign: 'center',
+                                lineHeight: 1.6,
+                                textShadow: '1px 1px 3px rgba(0,0,0,0.9)',
+                                maxWidth: '260px'
+                            }}>
+                                Las Sagradas Escrituras del Consejo de Hombres
+                            </p>
+
+                            <p style={{
+                                position: 'absolute',
+                                bottom: '20px',
+                                fontSize: '0.7rem',
+                                color: 'var(--gold-dark)',
+                                fontStyle: 'italic',
+                                opacity: 0.7
+                            }}>
+                                Actualización de 2025
+                            </p>
+                        </div>
                     </div>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
+
+                    {/* Modal para ver reportes */}
+                    {showReportModal && (
+                        <div className="modal-overlay" onClick={() => setShowReportModal(false)}>
+                            <div
+                                className={`modal-content ${reportError ? 'shake' : ''}`}
+                                onClick={(e) => e.stopPropagation()}
+                                style={{ maxWidth: '450px', maxHeight: '70vh', overflowY: 'auto' }}
+                            >
+                                {!isAuthenticated ? (
+                                    <>
+                                        <div style={{ color: '#8B0000', marginBottom: 'var(--space-md)' }}>
+                                            <Icon name="shield-alert" size={48} />
+                                        </div>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-display)',
+                                            fontSize: '1.2rem',
+                                            color: 'var(--brown-dark)'
+                                        }}>
+                                            Acceso del Alto Mando
+                                        </h3>
+                                        <p style={{ fontSize: '0.85rem', color: 'var(--brown-light)', margin: 'var(--space-sm) 0' }}>
+                                            Ingresa la contraseña del Consejo
+                                        </p>
+                                        <input
+                                            type="password"
+                                            className="modal-input"
+                                            placeholder="Contraseña"
+                                            value={reportPassword}
+                                            onChange={(e) => setReportPassword(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAuthenticate()}
+                                            autoFocus
+                                        />
+                                        <div className="modal-buttons">
+                                            <button className="modal-cancel" onClick={() => setShowReportModal(false)}>
+                                                Cancelar
+                                            </button>
+                                            <button className="modal-confirm" onClick={handleAuthenticate}>
+                                                Acceder
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-display)',
+                                            fontSize: '1.2rem',
+                                            color: 'var(--brown-dark)',
+                                            marginBottom: 'var(--space-md)'
+                                        }}>
+                                            📋 Reportes del Códice
+                                        </h3>
+
+                                        {reports.length === 0 ? (
+                                            <p style={{ textAlign: 'center', color: 'var(--brown-light)', padding: 'var(--space-lg)' }}>
+                                                No hay reportes pendientes. ¡El honor está intacto!
+                                            </p>
+                                        ) : (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                                                {reports.map((report, index) => (
+                                                    <div
+                                                        key={index}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            padding: 'var(--space-sm)',
+                                                            background: 'rgba(198, 40, 40, 0.1)',
+                                                            borderRadius: 'var(--radius-sm)',
+                                                            border: '1px solid rgba(198, 40, 40, 0.3)'
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <strong style={{ color: '#c62828' }}>Página {report.page}</strong>
+                                                            <p style={{ fontSize: '0.75rem', color: 'var(--brown-light)' }}>
+                                                                {report.date} - {report.time}
+                                                            </p>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleDeleteReport(index)}
+                                                            style={{
+                                                                padding: '6px 10px',
+                                                                background: 'var(--success)',
+                                                                color: 'white',
+                                                                border: 'none',
+                                                                borderRadius: '4px',
+                                                                cursor: 'pointer',
+                                                                fontSize: '0.7rem'
+                                                            }}
+                                                        >
+                                                            ✓ Revisado
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <div style={{ marginTop: 'var(--space-lg)', display: 'flex', gap: 'var(--space-sm)' }}>
+                                            {reports.length > 0 && (
+                                                <button
+                                                    onClick={handleClearAllReports}
+                                                    style={{
+                                                        flex: 1,
+                                                        padding: 'var(--space-sm)',
+                                                        background: '#c62828',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        borderRadius: 'var(--radius-sm)',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.8rem',
+                                                        fontFamily: 'var(--font-medieval)'
+                                                    }}
+                                                >
+                                                    Limpiar Todos
+                                                </button>
+                                            )}
+                                            <button
+                                                className="modal-cancel"
+                                                onClick={() => setShowReportModal(false)}
+                                                style={{ flex: 1 }}
+                                            >
+                                                Cerrar
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Left Page Decoration
+        function LeftPageDecoration() {
+            return (
+                <div className="book-page left paper-texture" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="page-ornament"></div>
+                    <div style={{
+                        width: '180px',
+                        height: '180px',
+                        opacity: 0.08,
+                        background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5L61 35H93L67 55L78 85L50 67L22 85L33 55L7 35H39Z' fill='%23d4af37'/%3E%3C/svg%3E") center/contain no-repeat`
+                    }}></div>
+                </div>
+            );
+        }
+
+        // Page Commandments
+        function PageCommandments({ hasSworn, onSwear, customCommandments, onAddCommandment, onRequestPassword }) {
+            const [showForm, setShowForm] = useState(false);
+            const [newCommandment, setNewCommandment] = useState('');
+
+            const handleAddClick = () => {
+                onRequestPassword(() => setShowForm(true));
+            };
+
+            const handleSave = () => {
+                if (newCommandment.trim()) {
+                    onAddCommandment(newCommandment.trim());
+                    setNewCommandment('');
+                    setShowForm(false);
+                }
+            };
+
+            return (
+                <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    {/* Contenido scrolleable */}
+                    <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', paddingBottom: 'var(--space-md)' }}>
+                        <h2 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.6rem',
+                            textAlign: 'center',
+                            borderBottom: '2px solid var(--gold-dark)',
+                            paddingBottom: 'var(--space-md)',
+                            color: 'var(--brown-dark)'
+                        }}>
+                            Mandamientos del Consejo
+                        </h2>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
+                            {COMMANDMENTS.map((cmd, i) => (
+                                <div key={i} className="commandment-item">
+                                    <div className="commandment-number">{i + 1}</div>
+                                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--brown-dark)' }}>
+                                        {cmd}
+                                    </p>
+                                </div>
+                            ))}
+
+                            {/* Custom commandments */}
+                            {customCommandments.map((cmd, i) => (
+                                <div key={`custom-${i}`} className="commandment-item">
+                                    <div className="commandment-number" style={{ background: 'linear-gradient(135deg, var(--gold-dark), var(--gold-darker))' }}>
+                                        {8 + i}
+                                    </div>
+                                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--brown-dark)' }}>
+                                        {cmd}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Add new commandment section */}
+                        {showForm ? (
+                            <div style={{
+                                padding: 'var(--space-md)',
+                                background: 'rgba(212, 175, 55, 0.1)',
+                                borderRadius: 'var(--radius-md)',
+                                border: '1px dashed var(--gold-dark)'
+                            }}>
+                                <p style={{ fontSize: '0.9rem', color: 'var(--brown-medium)', marginBottom: 'var(--space-sm)' }}>
+                                    Escribe el nuevo mandamiento:
+                                </p>
+                                <textarea
+                                    className="editor-textarea"
+                                    value={newCommandment}
+                                    onChange={(e) => setNewCommandment(e.target.value)}
+                                    placeholder="Tu mandamiento..."
+                                    style={{ minHeight: '80px', marginBottom: 'var(--space-sm)' }}
+                                />
+                                <button className="save-button" onClick={handleSave}>
+                                    <Icon name="save" size={18} />
+                                    Guardar Mandamiento
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleAddClick}
+                                style={{
+                                    width: '50px',
+                                    height: '50px',
+                                    margin: '0 auto',
+                                    borderRadius: '50%',
+                                    border: '2px dashed var(--gold-dark)',
+                                    background: 'rgba(212, 175, 55, 0.1)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <Icon name="plus" size={24} />
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Oath button - SIEMPRE VISIBLE, fuera del scroll */}
+                    <div style={{
+                        position: 'sticky',
+                        bottom: 0,
+                        background: 'linear-gradient(to top, var(--cream) 80%, transparent)',
+                        paddingTop: 'var(--space-lg)',
+                        paddingBottom: 'var(--space-sm)',
+                        marginTop: 'auto'
+                    }}>
+                        <button
+                            className={`oath-button ${hasSworn ? 'oath-accepted' : ''}`}
+                            onClick={!hasSworn ? onSwear : undefined}
+                            style={{ cursor: hasSworn ? 'default' : 'pointer' }}
+                        >
+                            <Icon name={hasSworn ? "check-circle" : "book-open"} size={20} />
+                            {hasSworn ? 'MANDAMIENTOS ACEPTADOS' : 'He leído los mandamientos y los acepto'}
+                        </button>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Nombre" required>
-                    <input type="email" placeholder="Email" required>
-                    <textarea rows="5" placeholder="Mensaje" required></textarea>
-                    <button type="submit" class="btn primary">Enviar Mensaje</button>
-                </form>
-            </div>
-        </div>
-    </section>
+            );
+        }
 
-    <footer>
-        <p>&copy; 2025 Erik Sanchez. Todos los derechos reservados.</p>
-    </footer>
+        // Page Wisdom
+        function PageWisdom({ pageNumber }) {
+            const quoteIndex = pageNumber - 2;
+            const quote = WISDOM_QUOTES[quoteIndex];
 
-    <script src="script.js"></script>
+            return (
+                <div className="wisdom-container fade-in">
+                    <div style={{ color: 'var(--gold-dark)' }}>
+                        <Icon name="scroll" size={48} />
+                    </div>
+
+                    <h3 style={{
+                        textTransform: 'uppercase',
+                        letterSpacing: '4px',
+                        color: 'var(--brown-light)',
+                        fontSize: '0.9rem'
+                    }}>
+                        Sabiduría Antigua {quoteIndex + 1}
+                    </h3>
+
+                    <p className="wisdom-quote">"{quote.quote}"</p>
+
+                    <div className="wisdom-divider"></div>
+
+                    <p className="wisdom-author">— {quote.author}</p>
+                </div>
+            );
+        }
+
+        // Page Editor
+        function PageEditor({ pageNum, onSave }) {
+            const [userName, setUserName] = useState("");
+            const [text, setText] = useState("");
+            const [video, setVideo] = useState("");
+            const [photo, setPhoto] = useState("");
+            const [photoPreview, setPhotoPreview] = useState("");
+
+            const handlePhotoChange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('La imagen es muy grande. Máximo 2MB.');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setPhoto(reader.result);
+                        setPhotoPreview(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const removePhoto = () => {
+                setPhoto("");
+                setPhotoPreview("");
+            };
+
+            return (
+                <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                    <div>
+                        <label style={{
+                            display: 'block',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            color: 'var(--brown-medium)',
+                            marginBottom: 'var(--space-sm)'
+                        }}>
+                            Legado de Sir
+                        </label>
+                        <input
+                            type="text"
+                            className="video-input"
+                            placeholder="Tu nombre"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            style={{ marginBottom: 'var(--space-sm)' }}
+                        />
+                    </div>
+
+                    <div>
+                        <label style={{
+                            display: 'block',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            color: 'var(--brown-medium)',
+                            marginBottom: 'var(--space-sm)'
+                        }}>
+                            Tu Sabiduría
+                        </label>
+                        <textarea
+                            className="editor-textarea"
+                            placeholder="Escribe aquí tu sabiduría para la eternidad..."
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Sección de Foto */}
+                    <div>
+                        <label style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'var(--space-sm)',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            color: 'var(--brown-medium)',
+                            marginBottom: 'var(--space-sm)'
+                        }}>
+                            <Icon name="image" size={16} />
+                            Tu Imagen (Opcional)
+                        </label>
+
+                        {!photoPreview ? (
+                            <label style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: 'var(--space-lg)',
+                                border: '2px dashed rgba(139, 69, 19, 0.3)',
+                                borderRadius: 'var(--radius-md)',
+                                cursor: 'pointer',
+                                background: 'rgba(212, 175, 55, 0.05)',
+                                transition: 'all 0.2s'
+                            }}>
+                                <Icon name="upload" size={32} />
+                                <span style={{ fontSize: '0.85rem', color: 'var(--brown-light)', marginTop: 'var(--space-sm)' }}>
+                                    Haz clic para subir una imagen
+                                </span>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--brown-light)', marginTop: '4px' }}>
+                                    Máximo 2MB
+                                </span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePhotoChange}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                        ) : (
+                            <div style={{
+                                position: 'relative',
+                                display: 'inline-block'
+                            }}>
+                                <img
+                                    src={photoPreview}
+                                    alt="Preview"
+                                    style={{
+                                        maxWidth: '200px',
+                                        maxHeight: '150px',
+                                        borderRadius: 'var(--radius-md)',
+                                        border: '2px solid var(--gold-dark)',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                                <button
+                                    onClick={removePhoto}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-8px',
+                                        right: '-8px',
+                                        width: '24px',
+                                        height: '24px',
+                                        borderRadius: '50%',
+                                        background: 'var(--error)',
+                                        border: 'none',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '14px'
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'var(--space-sm)',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            color: 'var(--brown-medium)',
+                            marginBottom: 'var(--space-sm)'
+                        }}>
+                            <Icon name="video" size={16} />
+                            Ofrenda Visual (Opcional)
+                        </label>
+                        <input
+                            type="url"
+                            className="video-input"
+                            placeholder="https://youtube.com, tiktok.com, facebook.com, instagram.com..."
+                            value={video}
+                            onChange={(e) => setVideo(e.target.value)}
+                        />
+                        <p style={{ fontSize: '0.75rem', color: 'var(--brown-light)', marginTop: 'var(--space-xs)' }}>
+                            Soporta: YouTube, TikTok, Facebook e Instagram
+                        </p>
+                    </div>
+
+                    <button
+                        className="save-button"
+                        onClick={() => onSave(pageNum, text, video, userName, photo)}
+                        disabled={!text.trim() || !userName.trim()}
+                    >
+                        <Icon name="feather" size={20} />
+                        Grabar en Oro
+                    </button>
+                </div>
+            );
+        }
+
+        // Page User Content
+        function PageUserContent({ data }) {
+            const getYouTubeEmbedUrl = (url) => {
+                if (!url) return null;
+                const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/);
+                return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+            };
+
+            const embedUrl = getYouTubeEmbedUrl(data.video);
+
+            return (
+                <div className="fade-in">
+                    {/* Mostrar foto si existe */}
+                    {data.photo && (
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginBottom: 'var(--space-md)'
+                        }}>
+                            <img
+                                src={data.photo}
+                                alt="Imagen del legado"
+                                style={{
+                                    maxWidth: '120px',
+                                    maxHeight: '120px',
+                                    borderRadius: 'var(--radius-md)',
+                                    border: '3px solid var(--gold-dark)',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                                    objectFit: 'cover'
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    <div style={{
+                        background: 'white',
+                        padding: 'var(--space-xl)',
+                        borderRadius: 'var(--radius-md)',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                        border: '1px solid rgba(212, 175, 55, 0.2)'
+                    }}>
+                        <p style={{
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '1.2rem',
+                            color: 'var(--brown-dark)',
+                            whiteSpace: 'pre-wrap',
+                            lineHeight: 1.8
+                        }}>
+                            {data.text}
+                        </p>
+                    </div>
+
+                    {data.video && (
+                        <div className="video-container">
+                            {embedUrl ? (
+                                <iframe
+                                    src={embedUrl}
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            ) : (
+                                <a href={data.video} target="_blank" rel="noopener noreferrer" className="video-link">
+                                    <Icon name="external-link" size={20} />
+                                    Ver Video Adjunto
+                                </a>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Page User
+        function PageUser({ pageNumber, userData, onSave }) {
+            const pageData = userData[pageNumber];
+
+            return (
+                <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <h2 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.4rem',
+                            color: 'var(--brown-dark)'
+                        }}>
+                            {pageData && pageData.userName
+                                ? `Legado de Sir ${pageData.userName}`
+                                : `Página ${pageNumber}`}
+                        </h2>
+                        <p style={{
+                            fontStyle: 'italic',
+                            color: 'var(--brown-light)',
+                            marginTop: 'var(--space-xs)',
+                            fontSize: '0.9rem'
+                        }}>
+                            {pageData ? 'Sabiduría grabada para la eternidad.' : 'Comparte tu legado con el mundo.'}
+                        </p>
+                    </div>
+
+                    {pageData ? (
+                        <PageUserContent data={pageData} />
+                    ) : (
+                        <PageEditor pageNum={pageNumber} onSave={onSave} />
+                    )}
+                </div>
+            );
+        }
+
+        // Password Modal
+        function PasswordModal({ onClose, onSuccess }) {
+            const [password, setPassword] = useState("");
+            const [error, setError] = useState(false);
+
+            const handleUnlock = () => {
+                if (password === PASSWORD) {
+                    onSuccess();
+                } else {
+                    setError(true);
+                    setTimeout(() => setError(false), 500);
+                }
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div
+                        className={`modal-content ${error ? 'shake' : ''}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div style={{ color: 'var(--gold-dark)', marginBottom: 'var(--space-md)' }}>
+                            <Icon name="key" size={48} />
+                        </div>
+
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.3rem',
+                            color: 'var(--brown-dark)'
+                        }}>
+                            Llave Maestra Requerida
+                        </h3>
+
+                        <input
+                            type="password"
+                            className="modal-input"
+                            placeholder="Contraseña del Consejo"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+                            autoFocus
+                        />
+
+                        <div className="modal-buttons">
+                            <button className="modal-cancel" onClick={onClose}>
+                                Cancelar
+                            </button>
+                            <button className="modal-confirm" onClick={handleUnlock}>
+                                Desbloquear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Navigation
+        function Navigation({ currentPage, hasSworn, onPrev, onNext, onGoToPage, onClose, shake }) {
+            const [searchValue, setSearchValue] = useState('');
+            const canGoBack = currentPage > 1;
+            const canGoForward = currentPage !== 1 || hasSworn;
+
+            const handleSearch = () => {
+                const pageNum = parseInt(searchValue, 10);
+                if (pageNum && pageNum >= 1) {
+                    onGoToPage(pageNum);
+                    setSearchValue('');
+                }
+            };
+
+            return (
+                <div style={{
+                    position: 'absolute',
+                    bottom: 'var(--space-md)',
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 'var(--space-md)'
+                }}>
+                    {/* Left Navigation - Retroceder */}
+                    <button
+                        className="nav-button"
+                        onClick={onPrev}
+                        disabled={!canGoBack}
+                        style={{ visibility: canGoBack ? 'visible' : 'hidden' }}
+                        title="Página anterior"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+
+                    {/* Page Search */}
+                    <div className="page-search">
+                        <input
+                            type="number"
+                            placeholder="busca tu página"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            min="1"
+                        />
+                        <button className="search-btn" onClick={handleSearch}>
+                            <Icon name="search" size={14} />
+                        </button>
+                    </div>
+
+                    {/* Right Navigation - Avanzar */}
+                    <button
+                        className={`nav-button ${!canGoForward && shake ? 'shake' : ''}`}
+                        onClick={onNext}
+                        title="Página siguiente"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+
+                </div>
+            );
+        }
+
+        // ================================
+        // ADMIN COMPONENTS
+        // ================================
+
+        // Admin Password Modal (contraseña secreta: OCIOSO)
+        const ADMIN_PASSWORD = "OCIOSO";
+
+        function AdminPasswordModal({ onClose, onSuccess }) {
+            const [password, setPassword] = useState("");
+            const [error, setError] = useState(false);
+
+            const handleUnlock = () => {
+                if (password === ADMIN_PASSWORD) {
+                    onSuccess();
+                } else {
+                    setError(true);
+                    setTimeout(() => setError(false), 500);
+                }
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div
+                        className={`modal-content ${error ? 'shake' : ''}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div style={{ color: '#8B0000', marginBottom: 'var(--space-md)' }}>
+                            <Icon name="shield-alert" size={48} />
+                        </div>
+
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.3rem',
+                            color: 'var(--brown-dark)'
+                        }}>
+                            Acceso Restringido
+                        </h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--brown-light)', margin: 'var(--space-sm) 0' }}>
+                            Solo el guardián del Codex puede acceder
+                        </p>
+
+                        <input
+                            type="password"
+                            className="modal-input"
+                            placeholder="Contraseña del Guardián"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+                            autoFocus
+                        />
+
+                        <div className="modal-buttons">
+                            <button className="modal-cancel" onClick={onClose}>
+                                Cancelar
+                            </button>
+                            <button className="modal-confirm" onClick={handleUnlock} style={{ background: 'linear-gradient(135deg, #8B0000, #5c0000)' }}>
+                                Acceder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Admin Menu - Borrar o Editar página
+        function AdminMenu({ pageNumber, pageData, onClose, onDelete, onEdit }) {
+            const [editMode, setEditMode] = useState(false);
+            const [editUserName, setEditUserName] = useState(pageData?.userName || '');
+            const [editText, setEditText] = useState(pageData?.text || '');
+            const [editVideo, setEditVideo] = useState(pageData?.video || '');
+
+            const handleSaveEdit = () => {
+                onEdit(pageNumber, editText, editVideo, editUserName);
+                onClose();
+            };
+
+            const handleDelete = () => {
+                if (confirm('¿Estás seguro de borrar esta página? Esta acción no se puede deshacer.')) {
+                    onDelete(pageNumber);
+                    onClose();
+                }
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div
+                        className="modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: editMode ? '500px' : '360px' }}
+                    >
+                        <div style={{ color: '#8B0000', marginBottom: 'var(--space-md)' }}>
+                            <Icon name="settings" size={36} />
+                        </div>
+
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.2rem',
+                            color: 'var(--brown-dark)',
+                            marginBottom: 'var(--space-md)'
+                        }}>
+                            {editMode ? `Editando Página ${pageNumber}` : `Administrar Página ${pageNumber}`}
+                        </h3>
+
+                        {!editMode ? (
+                            <>
+                                <p style={{ fontSize: '0.9rem', color: 'var(--brown-medium)', marginBottom: 'var(--space-lg)' }}>
+                                    Legado de: <strong>{pageData?.userName || 'Sin nombre'}</strong>
+                                </p>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                                    <button
+                                        onClick={() => setEditMode(true)}
+                                        style={{
+                                            padding: 'var(--space-md)',
+                                            background: 'linear-gradient(135deg, var(--gold-dark), var(--gold-darker))',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-md)',
+                                            fontFamily: 'var(--font-medieval)',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: 'var(--space-sm)'
+                                        }}
+                                    >
+                                        <Icon name="edit-3" size={18} />
+                                        Editar Contenido
+                                    </button>
+
+                                    <button
+                                        onClick={handleDelete}
+                                        style={{
+                                            padding: 'var(--space-md)',
+                                            background: 'linear-gradient(135deg, #c62828, #8B0000)',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-md)',
+                                            fontFamily: 'var(--font-medieval)',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: 'var(--space-sm)'
+                                        }}
+                                    >
+                                        <Icon name="trash-2" size={18} />
+                                        Borrar Página
+                                    </button>
+
+                                    <button className="modal-cancel" onClick={onClose}>
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', textAlign: 'left' }}>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                        Nombre
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="video-input"
+                                        value={editUserName}
+                                        onChange={(e) => setEditUserName(e.target.value)}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                        Sabiduría
+                                    </label>
+                                    <textarea
+                                        className="editor-textarea"
+                                        value={editText}
+                                        onChange={(e) => setEditText(e.target.value)}
+                                        style={{ minHeight: '100px' }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                        Video (opcional)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        className="video-input"
+                                        value={editVideo}
+                                        onChange={(e) => setEditVideo(e.target.value)}
+                                        placeholder="URL del video"
+                                    />
+                                </div>
+
+                                <div className="modal-buttons">
+                                    <button className="modal-cancel" onClick={() => setEditMode(false)}>
+                                        Volver
+                                    </button>
+                                    <button
+                                        className="modal-confirm"
+                                        onClick={handleSaveEdit}
+                                        disabled={!editText.trim() || !editUserName.trim()}
+                                    >
+                                        Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Full Admin Menu - Menú completo de administración para todas las páginas
+        function FullAdminMenu({ currentPage, storedData, onClose, onDeletePage, onEditPage, onDeleteCommandment, onEditCommandment }) {
+            const [activeTab, setActiveTab] = useState('current');
+            const [editMode, setEditMode] = useState(null); // 'page' o 'commandment-{index}'
+            const [editData, setEditData] = useState({ userName: '', text: '', video: '' });
+            const [editCommandmentText, setEditCommandmentText] = useState('');
+            const [confirmDelete, setConfirmDelete] = useState(null); // 'page' o 'commandment-{index}'
+
+            const pageData = storedData.pages?.[currentPage];
+            const customCommandments = storedData.customCommandments || [];
+            const isUserPage = currentPage >= 12;
+
+            // Inicializar datos de edición
+            const startEditPage = () => {
+                setEditData({
+                    userName: pageData?.userName || '',
+                    text: pageData?.text || '',
+                    video: pageData?.video || ''
+                });
+                setEditMode('page');
+            };
+
+            const startEditCommandment = (index) => {
+                setEditCommandmentText(customCommandments[index] || '');
+                setEditMode(`commandment-${index}`);
+            };
+
+            const handleSavePageEdit = () => {
+                onEditPage(currentPage, editData.text, editData.video, editData.userName);
+                setEditMode(null);
+            };
+
+            const handleSaveCommandmentEdit = (index) => {
+                onEditCommandment(index, editCommandmentText);
+                setEditMode(null);
+            };
+
+            const handleDeletePageConfirm = () => {
+                onDeletePage(currentPage);
+                onClose();
+            };
+
+            const handleDeleteCommandmentConfirm = (index) => {
+                onDeleteCommandment(index);
+                setConfirmDelete(null);
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div
+                        className="modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '500px', maxHeight: '80vh', overflowY: 'auto' }}
+                    >
+                        <div style={{ color: '#8B0000', marginBottom: 'var(--space-md)' }}>
+                            <Icon name="shield" size={36} />
+                        </div>
+
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.2rem',
+                            color: 'var(--brown-dark)',
+                            marginBottom: 'var(--space-md)'
+                        }}>
+                            Panel de Administración
+                        </h3>
+
+                        {/* Tabs */}
+                        <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-lg)' }}>
+                            <button
+                                onClick={() => setActiveTab('current')}
+                                style={{
+                                    flex: 1,
+                                    padding: 'var(--space-sm)',
+                                    background: activeTab === 'current' ? 'var(--gold-dark)' : '#eee',
+                                    color: activeTab === 'current' ? 'white' : 'var(--brown-dark)',
+                                    border: 'none',
+                                    borderRadius: 'var(--radius-sm)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.8rem',
+                                    fontFamily: 'var(--font-medieval)'
+                                }}
+                            >
+                                Página Actual ({currentPage})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('commandments')}
+                                style={{
+                                    flex: 1,
+                                    padding: 'var(--space-sm)',
+                                    background: activeTab === 'commandments' ? 'var(--gold-dark)' : '#eee',
+                                    color: activeTab === 'commandments' ? 'white' : 'var(--brown-dark)',
+                                    border: 'none',
+                                    borderRadius: 'var(--radius-sm)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.8rem',
+                                    fontFamily: 'var(--font-medieval)'
+                                }}
+                            >
+                                Mandamientos ({customCommandments.length})
+                            </button>
+                        </div>
+
+                        {/* Tab: Página Actual */}
+                        {activeTab === 'current' && (
+                            <div style={{ textAlign: 'left' }}>
+                                {isUserPage && pageData ? (
+                                    editMode === 'page' ? (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                                    Nombre
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="video-input"
+                                                    value={editData.userName}
+                                                    onChange={(e) => setEditData({ ...editData, userName: e.target.value })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                                    Sabiduría
+                                                </label>
+                                                <textarea
+                                                    className="editor-textarea"
+                                                    value={editData.text}
+                                                    onChange={(e) => setEditData({ ...editData, text: e.target.value })}
+                                                    style={{ minHeight: '100px' }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '4px', color: 'var(--brown-medium)' }}>
+                                                    Video (opcional)
+                                                </label>
+                                                <input
+                                                    type="url"
+                                                    className="video-input"
+                                                    value={editData.video}
+                                                    onChange={(e) => setEditData({ ...editData, video: e.target.value })}
+                                                    placeholder="URL del video"
+                                                />
+                                            </div>
+                                            <div className="modal-buttons">
+                                                <button className="modal-cancel" onClick={() => setEditMode(null)}>
+                                                    Cancelar
+                                                </button>
+                                                <button className="modal-confirm" onClick={handleSavePageEdit}>
+                                                    Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                                            <p style={{ fontSize: '0.9rem', color: 'var(--brown-medium)' }}>
+                                                <strong>Legado de:</strong> {pageData?.userName || 'Sin nombre'}
+                                            </p>
+                                            <p style={{ fontSize: '0.85rem', color: 'var(--brown-light)', maxHeight: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                {pageData?.text?.substring(0, 150)}...
+                                            </p>
+                                            <button
+                                                onClick={startEditPage}
+                                                style={{
+                                                    padding: 'var(--space-md)',
+                                                    background: 'linear-gradient(135deg, var(--gold-dark), var(--gold-darker))',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: 'var(--radius-md)',
+                                                    fontFamily: 'var(--font-medieval)',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: 'var(--space-sm)'
+                                                }}
+                                            >
+                                                <Icon name="edit-3" size={18} />
+                                                Editar Página
+                                            </button>
+
+                                            {confirmDelete === 'page' ? (
+                                                <div style={{
+                                                    padding: 'var(--space-md)',
+                                                    background: 'rgba(198, 40, 40, 0.1)',
+                                                    borderRadius: 'var(--radius-md)',
+                                                    border: '2px solid #c62828'
+                                                }}>
+                                                    <p style={{ fontSize: '0.85rem', color: '#c62828', marginBottom: 'var(--space-sm)', textAlign: 'center' }}>
+                                                        ¿Estás seguro? Esta acción no se puede deshacer.
+                                                    </p>
+                                                    <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+                                                        <button
+                                                            onClick={() => setConfirmDelete(null)}
+                                                            style={{
+                                                                flex: 1,
+                                                                padding: 'var(--space-sm)',
+                                                                background: '#ddd',
+                                                                border: 'none',
+                                                                borderRadius: 'var(--radius-sm)',
+                                                                cursor: 'pointer',
+                                                                fontFamily: 'var(--font-medieval)'
+                                                            }}
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                        <button
+                                                            onClick={handleDeletePageConfirm}
+                                                            style={{
+                                                                flex: 1,
+                                                                padding: 'var(--space-sm)',
+                                                                background: '#c62828',
+                                                                color: 'white',
+                                                                border: 'none',
+                                                                borderRadius: 'var(--radius-sm)',
+                                                                cursor: 'pointer',
+                                                                fontFamily: 'var(--font-medieval)'
+                                                            }}
+                                                        >
+                                                            Sí, Borrar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => setConfirmDelete('page')}
+                                                    style={{
+                                                        padding: 'var(--space-md)',
+                                                        background: 'linear-gradient(135deg, #c62828, #8B0000)',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        borderRadius: 'var(--radius-md)',
+                                                        fontFamily: 'var(--font-medieval)',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        gap: 'var(--space-sm)'
+                                                    }}
+                                                >
+                                                    <Icon name="trash-2" size={18} />
+                                                    Borrar Página Completa
+                                                </button>
+                                            )}
+                                        </div>
+                                    )
+                                ) : isUserPage && !pageData ? (
+                                    <p style={{ textAlign: 'center', color: 'var(--brown-light)', padding: 'var(--space-lg)' }}>
+                                        Esta página aún no tiene contenido.
+                                    </p>
+                                ) : (
+                                    <p style={{ textAlign: 'center', color: 'var(--brown-light)', padding: 'var(--space-lg)' }}>
+                                        {currentPage === 1 ? 'Página de Mandamientos. Usa la pestaña "Mandamientos" para editarlos.' : 'Esta es una página de sabiduría predefinida y no se puede editar.'}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Tab: Mandamientos */}
+                        {activeTab === 'commandments' && (
+                            <div style={{ textAlign: 'left' }}>
+                                {customCommandments.length === 0 ? (
+                                    <p style={{ textAlign: 'center', color: 'var(--brown-light)', padding: 'var(--space-lg)' }}>
+                                        No hay mandamientos personalizados creados.
+                                    </p>
+                                ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                                        {customCommandments.map((cmd, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    padding: 'var(--space-md)',
+                                                    background: 'rgba(212, 175, 55, 0.1)',
+                                                    borderRadius: 'var(--radius-md)',
+                                                    border: '1px solid rgba(212, 175, 55, 0.3)'
+                                                }}
+                                            >
+                                                {editMode === `commandment-${index}` ? (
+                                                    <div>
+                                                        <textarea
+                                                            className="editor-textarea"
+                                                            value={editCommandmentText}
+                                                            onChange={(e) => setEditCommandmentText(e.target.value)}
+                                                            style={{ minHeight: '60px', marginBottom: 'var(--space-sm)' }}
+                                                        />
+                                                        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+                                                            <button
+                                                                onClick={() => setEditMode(null)}
+                                                                style={{ flex: 1, padding: '8px', background: '#ddd', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleSaveCommandmentEdit(index)}
+                                                                style={{ flex: 1, padding: '8px', background: 'var(--gold-dark)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                                                            >
+                                                                Guardar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-sm)', marginBottom: 'var(--space-sm)' }}>
+                                                            <span style={{
+                                                                background: 'var(--gold-dark)',
+                                                                color: 'white',
+                                                                padding: '2px 8px',
+                                                                borderRadius: '50%',
+                                                                fontSize: '0.8rem',
+                                                                fontWeight: 'bold'
+                                                            }}>
+                                                                {8 + index}
+                                                            </span>
+                                                            <p style={{ fontSize: '0.9rem', color: 'var(--brown-dark)', flex: 1 }}>{cmd}</p>
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+                                                            <button
+                                                                onClick={() => startEditCommandment(index)}
+                                                                style={{
+                                                                    flex: 1,
+                                                                    padding: '6px',
+                                                                    background: 'var(--gold-dark)',
+                                                                    color: 'white',
+                                                                    border: 'none',
+                                                                    borderRadius: '4px',
+                                                                    cursor: 'pointer',
+                                                                    fontSize: '0.75rem',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    gap: '4px'
+                                                                }}
+                                                            >
+                                                                <Icon name="edit-3" size={12} />
+                                                                Editar
+                                                            </button>
+                                                            {confirmDelete === `commandment-${index}` ? (
+                                                                <button
+                                                                    onClick={() => handleDeleteCommandmentConfirm(index)}
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        padding: '6px',
+                                                                        background: '#8B0000',
+                                                                        color: 'white',
+                                                                        border: 'none',
+                                                                        borderRadius: '4px',
+                                                                        cursor: 'pointer',
+                                                                        fontSize: '0.75rem',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        gap: '4px'
+                                                                    }}
+                                                                >
+                                                                    Confirmar
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => setConfirmDelete(`commandment-${index}`)}
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        padding: '6px',
+                                                                        background: '#c62828',
+                                                                        color: 'white',
+                                                                        border: 'none',
+                                                                        borderRadius: '4px',
+                                                                        cursor: 'pointer',
+                                                                        fontSize: '0.75rem',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        gap: '4px'
+                                                                    }}
+                                                                >
+                                                                    <Icon name="trash-2" size={12} />
+                                                                    Borrar
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <button
+                            className="modal-cancel"
+                            onClick={onClose}
+                            style={{ marginTop: 'var(--space-lg)', width: '100%' }}
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Secret Admin Button - Botón secreto con triple click
+        function SecretAdminButton({ onActivate }) {
+            const clickCount = React.useRef(0);
+            const clickTimer = React.useRef(null);
+            const [showHint, setShowHint] = useState(false);
+
+            const handleClick = () => {
+                clickCount.current += 1;
+
+                if (clickCount.current === 1) {
+                    // Primer click - iniciar timer
+                    clickTimer.current = setTimeout(() => {
+                        clickCount.current = 0;
+                        setShowHint(false);
+                    }, 1500);
+                } else if (clickCount.current === 2) {
+                    // Segundo click - mostrar hint
+                    setShowHint(true);
+                } else if (clickCount.current >= 3) {
+                    // Tercer click - activar
+                    clearTimeout(clickTimer.current);
+                    clickCount.current = 0;
+                    setShowHint(false);
+                    onActivate();
+                }
+            };
+
+            return (
+                <div
+                    onClick={handleClick}
+                    title="Mantén presionado o haz triple clic"
+                    style={{
+                        position: 'fixed',
+                        bottom: '80px',
+                        right: '20px',
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, rgba(139, 0, 0, 0.15), rgba(139, 0, 0, 0.25))',
+                        border: '2px solid rgba(139, 0, 0, 0.3)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 50,
+                        transition: 'all 0.3s',
+                        userSelect: 'none',
+                        boxShadow: showHint ? '0 0 15px rgba(139, 0, 0, 0.5)' : '0 2px 8px rgba(0, 0, 0, 0.2)'
+                    }}
+                >
+                    <Icon name="settings" size={18} />
+                    {showHint && (
+                        <span style={{
+                            position: 'absolute',
+                            bottom: '-28px',
+                            right: '0',
+                            fontSize: '0.65rem',
+                            color: 'rgba(139, 0, 0, 0.8)',
+                            fontFamily: 'var(--font-medieval)',
+                            whiteSpace: 'nowrap',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            padding: '2px 6px',
+                            borderRadius: '4px'
+                        }}>
+                            ¡Uno más!
+                        </span>
+                    )}
+                </div>
+            );
+        }
+
+        // OCI-OSO Button - Presionar 3 segundos para acceso de edición
+        const OCIOCO_PASSWORD = "OSOICO";
+
+        function OciOsoButton({ onSuccess }) {
+            const [showPasswordModal, setShowPasswordModal] = useState(false);
+            const [password, setPassword] = useState("");
+            const [error, setError] = useState(false);
+            const pressTimer = React.useRef(null);
+            const [isPressed, setIsPressed] = useState(false);
+            const [progress, setProgress] = useState(0);
+
+            const handlePressStart = () => {
+                setIsPressed(true);
+                setProgress(0);
+
+                // Iniciar progreso
+                let currentProgress = 0;
+                const interval = setInterval(() => {
+                    currentProgress += 3.33;
+                    setProgress(currentProgress);
+                    if (currentProgress >= 100) {
+                        clearInterval(interval);
+                    }
+                }, 100);
+
+                pressTimer.current = setTimeout(() => {
+                    clearInterval(interval);
+                    setShowPasswordModal(true);
+                    setIsPressed(false);
+                    setProgress(0);
+                }, 3000);
+            };
+
+            const handlePressEnd = () => {
+                if (pressTimer.current) {
+                    clearTimeout(pressTimer.current);
+                    pressTimer.current = null;
+                }
+                setIsPressed(false);
+                setProgress(0);
+            };
+
+            const handleUnlock = () => {
+                if (password === OCIOCO_PASSWORD) {
+                    setShowPasswordModal(false);
+                    setPassword("");
+                    onSuccess();
+                } else {
+                    setError(true);
+                    setTimeout(() => setError(false), 500);
+                }
+            };
+
+            const closeModal = () => {
+                setShowPasswordModal(false);
+                setPassword("");
+                setError(false);
+            };
+
+            return (
+                <>
+                    <span
+                        onMouseDown={handlePressStart}
+                        onMouseUp={handlePressEnd}
+                        onMouseLeave={handlePressEnd}
+                        onTouchStart={handlePressStart}
+                        onTouchEnd={handlePressEnd}
+                        style={{
+                            position: 'fixed',
+                            top: 'calc(var(--space-lg) + 25px)',
+                            right: 'var(--space-lg)',
+                            fontSize: '0.75rem',
+                            color: isPressed ? 'var(--gold-primary)' : 'rgba(212, 175, 55, 0.4)',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-medieval)',
+                            transition: 'color 0.2s',
+                            zIndex: 50,
+                            textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
+                            userSelect: 'none'
+                        }}
+                    >
+                        OCI-OSO
+                        {isPressed && (
+                            <div style={{
+                                position: 'absolute',
+                                bottom: '-4px',
+                                left: 0,
+                                right: 0,
+                                height: '2px',
+                                background: 'rgba(212, 175, 55, 0.3)',
+                                borderRadius: '1px',
+                                overflow: 'hidden'
+                            }}>
+                                <div style={{
+                                    width: `${progress}%`,
+                                    height: '100%',
+                                    background: 'var(--gold-primary)',
+                                    transition: 'width 0.1s linear'
+                                }} />
+                            </div>
+                        )}
+                    </span>
+
+                    {showPasswordModal && (
+                        <div className="modal-overlay" onClick={closeModal}>
+                            <div
+                                className={`modal-content ${error ? 'shake' : ''}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div style={{ color: 'var(--gold-dark)', marginBottom: 'var(--space-md)' }}>
+                                    <Icon name="edit-3" size={48} />
+                                </div>
+
+                                <h3 style={{
+                                    fontFamily: 'var(--font-display)',
+                                    fontSize: '1.3rem',
+                                    color: 'var(--brown-dark)'
+                                }}>
+                                    Acceso de Edición
+                                </h3>
+                                <p style={{ fontSize: '0.85rem', color: 'var(--brown-light)', margin: 'var(--space-sm) 0' }}>
+                                    Ingresa la contraseña del manuscrito
+                                </p>
+
+                                <input
+                                    type="password"
+                                    className="modal-input"
+                                    placeholder="Contraseña"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
+                                    autoFocus
+                                />
+
+                                <div className="modal-buttons">
+                                    <button className="modal-cancel" onClick={closeModal}>
+                                        Cancelar
+                                    </button>
+                                    <button className="modal-confirm" onClick={handleUnlock}>
+                                        Acceder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        }
+
+        // ================================
+        // DISCLAIMER MODAL
+        // ================================
+        function DisclaimerModal({ onAccept }) {
+            return (
+                <div className="modal-overlay" style={{ zIndex: 9999 }}>
+                    <div
+                        className="modal-content"
+                        style={{
+                            maxWidth: '700px',
+                            maxHeight: '85vh',
+                            overflowY: 'auto',
+                            textAlign: 'left'
+                        }}
+                    >
+                        <h2 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.3rem',
+                            color: '#8B0000',
+                            textAlign: 'center',
+                            marginBottom: 'var(--space-md)',
+                            borderBottom: '2px solid var(--gold-dark)',
+                            paddingBottom: 'var(--space-sm)'
+                        }}>
+                            ⚖️ DECLARACIÓN FORMAL DE DESCARGO DE RESPONSABILIDAD
+                        </h2>
+
+                        <h3 style={{
+                            fontFamily: 'var(--font-medieval)',
+                            fontSize: '1rem',
+                            color: 'var(--brown-dark)',
+                            textAlign: 'center',
+                            marginBottom: 'var(--space-lg)'
+                        }}>
+                            EDICIÓN Y ACEPTACIÓN DEL CÓDICE URSUS
+                        </h3>
+
+                        <div style={{ fontSize: '0.8rem', color: 'var(--brown-medium)', lineHeight: 1.7 }}>
+                            <p style={{ marginBottom: 'var(--space-md)' }}>
+                                El presente documento establece los términos de uso y el descargo de responsabilidad aplicables a la plataforma digital y contenido conocido como <strong>CODEX URSUS</strong>, diseñado y provisto por el <strong>Guardián Oci</strong> (en adelante, el "Proveedor" o "Diseñador").
+                            </p>
+
+                            <h4 style={{ color: 'var(--gold-darker)', marginBottom: 'var(--space-sm)', fontSize: '0.9rem' }}>
+                                SECCIÓN I. NATURALEZA Y LIMITACIONES DEL CONTENIDO
+                            </h4>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong>Carácter Meramente Informativo y de Entretenimiento:</strong> La totalidad de la Sabiduría (incluyendo Mandamientos Fundacionales, Sabiduría Antigua y Contribuciones de Terceros) es proporcionada estrictamente <em>as is</em> (tal cual), con fines exclusivos de expresión, camaradería, e interacción lúdica.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-md)' }}>
+                                <strong>Exclusión de Garantías Profesionales:</strong> Queda expresamente establecido que la Sabiduría contenida en el Codex NO sustituye, ni debe ser utilizada en lugar de, el asesoramiento profesional en áreas críticas tales como: derecho, medicina, finanzas, ingeniería o salud mental. El Proveedor no ofrece garantía alguna sobre la exactitud, exhaustividad, actualidad o aplicabilidad del contenido para fines profesionales o de toma de decisiones.
+                            </p>
+
+                            <h4 style={{ color: 'var(--gold-darker)', marginBottom: 'var(--space-sm)', fontSize: '0.9rem' }}>
+                                SECCIÓN II. RESPONSABILIDAD LEGAL DE LOS TERCEROS (USUARIOS)
+                            </h4>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong>Autoría del Contenido:</strong> El Proveedor actúa únicamente como un medio técnico de publicación. El Proveedor no es el autor, editor, moderador activo ni validador legal del contenido generado por los usuarios (las "Contribuciones de la Hermandad").
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong>Exoneración de Responsabilidad del Proveedor:</strong> El usuario (Guerrero) que inscribe su mensaje en el Codex es TOTAL Y EXCLUSIVAMENTE RESPONSABLE de su Contribución. El Proveedor queda expresamente eximido de toda responsabilidad, ya sea civil, penal o administrativa, por cualquier perjuicio, daño o pérdida directa o indirecta resultante de las Contribuciones, incluyendo, sin limitarse a:
+                            </p>
+                            <ul style={{ marginLeft: 'var(--space-lg)', marginBottom: 'var(--space-sm)' }}>
+                                <li>Violación de derechos de propiedad intelectual (plagio, derechos de autor).</li>
+                                <li>Contenido difamatorio, calumnioso, injurioso o que constituya acoso.</li>
+                                <li>Contenido que incite al odio, la violencia o la ilegalidad.</li>
+                                <li>Cualquier acto u omisión basado en los consejos plasmados por terceros.</li>
+                            </ul>
+                            <p style={{ marginBottom: 'var(--space-md)' }}>
+                                <strong>Compromiso de Moderación:</strong> Si bien el Proveedor se reserva el derecho unilateral de retirar o bloquear el acceso a Contribuciones que violen la ley o los Mandamientos Fundacionales, el Proveedor no asume ninguna obligación ni garantía de vigilancia constante. La detección y reporte de contenido inapropiado recae, inicialmente, en la diligencia de la Hermandad.
+                            </p>
+
+                            <h4 style={{ color: 'var(--gold-darker)', marginBottom: 'var(--space-sm)', fontSize: '0.9rem' }}>
+                                SECCIÓN III. CONSENTIMIENTO Y FUERO
+                            </h4>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong>Consentimiento Explícito:</strong> Al interactuar con el Codex Ursus (al hacer clic en el broche ancestral y jurar honor), el usuario declara haber leído, comprendido y ACEPTADO de forma irrevocable el presente Descargo de Responsabilidad.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-sm)' }}>
+                                <strong>Renuncia a Demandas:</strong> El usuario renuncia, de manera irrevocable y expresa, a iniciar cualquier acción legal contra el Proveedor (Oci, el Diseñador) derivada directa o indirectamente de la Sabiduría aquí publicada por terceros.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-lg)', fontStyle: 'italic' }}>
+                                Toda controversia o reclamo legal debe ser dirigido exclusivamente contra el autor de la Contribución específica, quedando el Proveedor como parte exenta.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={onAccept}
+                            style={{
+                                width: '100%',
+                                padding: 'var(--space-md)',
+                                background: 'linear-gradient(135deg, var(--gold-dark), var(--gold-darker))',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: 'var(--radius-md)',
+                                fontFamily: 'var(--font-medieval)',
+                                fontSize: '1rem',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)'
+                            }}
+                        >
+                            ✓ He leído y ACEPTO el Descargo de Responsabilidad
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // ================================
+        // MAIN APP
+        // ================================
+        function App() {
+            const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
+            const [isOpen, setIsOpen] = useState(false);
+            const [currentPage, setCurrentPage] = useState(1);
+            const [hasSworn, setHasSworn] = useState(false);
+            const [shake, setShake] = useState(false);
+            const [showPasswordModal, setShowPasswordModal] = useState(false);
+            const [passwordCallback, setPasswordCallback] = useState(null);
+            const [showInvitation, setShowInvitation] = useState(false);
+
+            // Admin states
+            const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
+            const [showAdminMenu, setShowAdminMenu] = useState(false);
+
+            // Load data from localStorage
+            const [storedData, setStoredData] = useState(() => loadFromStorage());
+
+            // Función para encontrar la primera página vacía
+            const findFirstEmptyPage = useCallback(() => {
+                // Las páginas de usuario empiezan en 12
+                let page = 12;
+                while (storedData.pages && storedData.pages[page]) {
+                    page++;
+                }
+                return page;
+            }, [storedData.pages]);
+
+            // Función para abrir el libro (abre en página 1 - mandamientos)
+            const handleOpenBook = useCallback(() => {
+                setCurrentPage(1);
+                setHasSworn(false);
+                setIsOpen(true);
+            }, []);
+
+            // Función cuando el usuario acepta los mandamientos
+            const handleSwear = useCallback(() => {
+                setHasSworn(true);
+
+                // Ir a la primera página vacía
+                const emptyPage = findFirstEmptyPage();
+                setCurrentPage(emptyPage);
+
+                // Mostrar leyenda de invitación
+                setShowInvitation(true);
+                setTimeout(() => {
+                    setShowInvitation(false);
+                }, 5000); // Desaparece después de 5 segundos
+            }, [findFirstEmptyPage]);
+
+            // Trigger shake animation
+            const triggerShake = useCallback(() => {
+                setShake(true);
+                setTimeout(() => setShake(false), 500);
+            }, []);
+
+            // Navigation handlers
+            const handleNext = useCallback(() => {
+                if (currentPage === 1 && !hasSworn) {
+                    triggerShake();
+                    return;
+                }
+                setCurrentPage(prev => prev + 1);
+            }, [currentPage, hasSworn, triggerShake]);
+
+            const handlePrev = useCallback(() => {
+                if (currentPage > 1) {
+                    setCurrentPage(prev => prev - 1);
+                }
+            }, [currentPage]);
+
+            // Go to specific page
+            const handleGoToPage = useCallback((pageNum) => {
+                if (pageNum === 1 || hasSworn) {
+                    setCurrentPage(pageNum);
+                } else {
+                    setCurrentPage(1);
+                }
+            }, [hasSworn]);
+
+            // Close book
+            const handleCloseBook = useCallback(() => {
+                setIsOpen(false);
+            }, []);
+
+            // Save page data
+            const handleSavePageData = useCallback((page, text, video, userName, photo) => {
+                const newData = {
+                    ...storedData,
+                    pages: {
+                        ...storedData.pages,
+                        [page]: { text, video: video || null, userName: userName || null, photo: photo || null }
+                    }
+                };
+                setStoredData(newData);
+                saveToStorage(newData);
+            }, [storedData]);
+
+            // Add custom commandment
+            const handleAddCommandment = useCallback((text) => {
+                const newData = {
+                    ...storedData,
+                    customCommandments: [...(storedData.customCommandments || []), text]
+                };
+                setStoredData(newData);
+                saveToStorage(newData);
+            }, [storedData]);
+
+            // Request password - takes callback to execute after success
+            const handleRequestPassword = useCallback((callback) => {
+                setPasswordCallback(() => callback);
+                setShowPasswordModal(true);
+            }, []);
+
+            // Handle password success
+            const handlePasswordSuccess = useCallback(() => {
+                if (passwordCallback) {
+                    passwordCallback();
+                }
+                setShowPasswordModal(false);
+                setPasswordCallback(null);
+            }, [passwordCallback]);
+
+            // Admin: Delete page
+            const handleDeletePage = useCallback((page) => {
+                const newPages = { ...storedData.pages };
+                delete newPages[page];
+                const newData = {
+                    ...storedData,
+                    pages: newPages
+                };
+                setStoredData(newData);
+                saveToStorage(newData);
+            }, [storedData]);
+
+            // Admin: Edit page
+            const handleEditPage = useCallback((page, text, video, userName, photo) => {
+                const existingPhoto = storedData.pages[page]?.photo;
+                const newData = {
+                    ...storedData,
+                    pages: {
+                        ...storedData.pages,
+                        [page]: { text, video: video || null, userName: userName || null, photo: photo !== undefined ? photo : existingPhoto }
+                    }
+                };
+                setStoredData(newData);
+                saveToStorage(newData);
+            }, [storedData]);
+
+            // Admin: Handle secret button press
+            const handleSecretButtonPress = useCallback(() => {
+                setShowAdminPasswordModal(true);
+            }, []);
+
+            // Admin: Handle admin password success
+            const handleAdminPasswordSuccess = useCallback(() => {
+                setShowAdminPasswordModal(false);
+                setShowAdminMenu(true);
+            }, []);
+
+            // Render current page content
+            const renderPageContent = () => {
+                if (currentPage === 1) {
+                    return (
+                        <PageCommandments
+                            hasSworn={hasSworn}
+                            onSwear={handleSwear}
+                            customCommandments={storedData.customCommandments || []}
+                            onAddCommandment={handleAddCommandment}
+                            onRequestPassword={handleRequestPassword}
+                        />
+                    );
+                }
+
+                if (currentPage >= 2 && currentPage <= 11) {
+                    return <PageWisdom pageNumber={currentPage} />;
+                }
+
+                if (currentPage >= 12) {
+                    return (
+                        <PageUser
+                            pageNumber={currentPage}
+                            userData={storedData.pages}
+                            onSave={handleSavePageData}
+                        />
+                    );
+                }
+
+                return null;
+            };
+
+            // Show disclaimer first
+            if (!hasAcceptedDisclaimer) {
+                return <DisclaimerModal onAccept={() => setHasAcceptedDisclaimer(true)} />;
+            }
+
+            // If book is closed
+            if (!isOpen) {
+                return <BookCover onOpen={handleOpenBook} />;
+            }
+
+            // Book is open
+            return (
+                <div
+                    className="book-enter"
+                    style={{
+                        height: '100vh',
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 'var(--space-lg)',
+                        position: 'relative'
+                    }}
+                >
+                    {/* Fondo místico */}
+                    <div className="mystic-background"></div>
+                    {/* Marca de agua */}
+                    <div className="watermark"></div>
+
+                    {/* Botón cerrar en esquina superior derecha */}
+                    <span
+                        onClick={handleCloseBook}
+                        style={{
+                            position: 'fixed',
+                            top: 'var(--space-lg)',
+                            right: 'var(--space-lg)',
+                            fontSize: '0.85rem',
+                            color: 'var(--gold-light)',
+                            cursor: 'pointer',
+                            fontStyle: 'italic',
+                            fontFamily: 'var(--font-medieval)',
+                            transition: 'color 0.2s, transform 0.2s',
+                            zIndex: 50,
+                            textShadow: '1px 1px 3px rgba(0,0,0,0.8)'
+                        }}
+                        onMouseOver={(e) => e.target.style.color = 'var(--gold-primary)'}
+                        onMouseOut={(e) => e.target.style.color = 'var(--gold-light)'}
+                    >
+                        cerrar ✕
+                    </span>
+
+                    {/* Botón OCI-OSO - Acceso secreto para editar manuscrito */}
+                    <OciOsoButton onSuccess={() => setShowAdminMenu(true)} />
+
+                    {/* Créditos del creador */}
+                    <span
+                        style={{
+                            position: 'fixed',
+                            bottom: '10px',
+                            right: '10px',
+                            fontSize: '0.6rem',
+                            color: 'rgba(212, 175, 55, 0.5)',
+                            fontFamily: 'var(--font-body)',
+                            zIndex: 50,
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                            opacity: 0.7
+                        }}
+                    >
+                        Página creada por Erik Alejandro Sanchez Olvera
+                    </span>
+
+                    <div className={`book-open paper-texture ${shake ? 'shake' : ''}`} style={{ position: 'relative', zIndex: 2 }}>
+                        <div className="book-spine"></div>
+
+                        <LeftPageDecoration />
+
+                        <div className="book-page right paper-texture" style={{
+                            background: 'linear-gradient(to right, rgba(255, 250, 240, 0.3), var(--cream))'
+                        }}>
+                            <div className="page-ornament"></div>
+
+                            <div style={{
+                                position: 'relative',
+                                zIndex: 1,
+                                height: 'calc(100% - 60px)',
+                                overflowY: 'auto',
+                                paddingRight: 'var(--space-sm)'
+                            }}>
+                                {renderPageContent()}
+                            </div>
+
+                            <Navigation
+                                currentPage={currentPage}
+                                hasSworn={hasSworn}
+                                onPrev={handlePrev}
+                                onNext={handleNext}
+                                onGoToPage={handleGoToPage}
+                                onClose={handleCloseBook}
+                                shake={currentPage === 1 && !hasSworn}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Leyenda de invitación - aparece por unos segundos */}
+                    {showInvitation && (
+                        <div
+                            style={{
+                                position: 'fixed',
+                                bottom: '40px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                background: 'linear-gradient(135deg, rgba(62, 39, 35, 0.95), rgba(93, 64, 55, 0.95))',
+                                color: 'var(--gold-light)',
+                                padding: 'var(--space-md) var(--space-xl)',
+                                borderRadius: 'var(--radius-lg)',
+                                border: '2px solid var(--gold-dark)',
+                                fontFamily: 'var(--font-medieval)',
+                                fontSize: '1rem',
+                                textAlign: 'center',
+                                zIndex: 100,
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.3)',
+                                animation: 'fadeInOut 5s ease-in-out forwards',
+                                maxWidth: '90%'
+                            }}
+                        >
+                            ✨ Te invitamos a leer la sabiduría de tus hermanos ✨
+                        </div>
+                    )}
+
+                    {showPasswordModal && (
+                        <PasswordModal
+                            onClose={() => {
+                                setShowPasswordModal(false);
+                                setPasswordCallback(null);
+                            }}
+                            onSuccess={handlePasswordSuccess}
+                        />
+                    )}
+
+                    {/* Admin Password Modal */}
+                    {showAdminPasswordModal && (
+                        <AdminPasswordModal
+                            onClose={() => setShowAdminPasswordModal(false)}
+                            onSuccess={handleAdminPasswordSuccess}
+                        />
+                    )}
+
+                    {/* Admin Menu - Mejorado para todas las páginas */}
+                    {showAdminMenu && (
+                        <FullAdminMenu
+                            currentPage={currentPage}
+                            storedData={storedData}
+                            onClose={() => setShowAdminMenu(false)}
+                            onDeletePage={handleDeletePage}
+                            onEditPage={handleEditPage}
+                            onDeleteCommandment={(index) => {
+                                const newCommandments = [...(storedData.customCommandments || [])];
+                                newCommandments.splice(index, 1);
+                                const newData = { ...storedData, customCommandments: newCommandments };
+                                setStoredData(newData);
+                                saveToStorage(newData);
+                            }}
+                            onEditCommandment={(index, newText) => {
+                                const newCommandments = [...(storedData.customCommandments || [])];
+                                newCommandments[index] = newText;
+                                const newData = { ...storedData, customCommandments: newCommandments };
+                                setStoredData(newData);
+                                saveToStorage(newData);
+                            }}
+                        />
+                    )}
+
+                    {/* Secret Admin Button - Solo visible en páginas de usuario (12+) con contenido */}
+                    {currentPage >= 12 && storedData.pages[currentPage] && (
+                        <SecretAdminButton onActivate={handleSecretButtonPress} />
+                    )}
+                </div>
+            );
+        }
+
+        // Mount React App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
+
 </html>
