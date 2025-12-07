@@ -1047,7 +1047,13 @@
             }
 
             .page-search {
-                display: none;
+                display: flex;
+                padding: 3px 6px;
+            }
+
+            .page-search input {
+                width: 60px;
+                font-size: 0.7rem;
             }
         }
 
@@ -1122,10 +1128,11 @@
             .book-page.right {
                 width: 100% !important;
                 flex: none !important;
-                min-height: 100vh;
-                height: 100vh;
-                max-height: 100vh;
-                padding: var(--space-md);
+                min-height: 85vh;
+                height: 85vh;
+                max-height: 85vh;
+                padding: var(--space-sm);
+                padding-bottom: 60px;
                 display: flex !important;
                 flex-direction: column !important;
                 overflow: hidden !important;
@@ -3295,10 +3302,100 @@
         }
 
         // ================================
+        // MOBILE INSTRUCTIONS MODAL
+        // ================================
+        function MobileInstructionsModal({ onContinue }) {
+            return (
+                <div className="modal-overlay" style={{ zIndex: 9998 }}>
+                    <div
+                        className="modal-content"
+                        style={{
+                            maxWidth: '95%',
+                            maxHeight: '90vh',
+                            overflowY: 'auto',
+                            textAlign: 'left',
+                            padding: 'var(--space-md)'
+                        }}
+                    >
+                        <h2 style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '1.1rem',
+                            color: 'var(--gold-darker)',
+                            textAlign: 'center',
+                            marginBottom: 'var(--space-md)',
+                            borderBottom: '2px solid var(--gold-dark)',
+                            paddingBottom: 'var(--space-sm)'
+                        }}>
+                            📜 Instrucciones del Códice
+                        </h2>
+
+                        <div style={{ fontSize: '0.75rem', color: 'var(--brown-medium)', lineHeight: 1.6 }}>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>⚔️ Activación:</strong> Presiona el broche para abrir el códice.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>📖 Juramento:</strong> Lee los Mandamientos (Página I) y jura honor para avanzar.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>🔍 La Búsqueda:</strong> Navega por la sabiduría o usa el Buscador de Páginas.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>✍️ Tu Sello:</strong> Inscribe tu Nombre y comparte tu Sabiduría.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>🎬 Testimonio:</strong> Añade un enlace de video si lo tienes.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>🖼️ Insignia:</strong> (Opcional) Añade tu foto.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>🤝 Camaradería:</strong> Honra las palabras de los hermanos.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)', color: '#c62828' }}>
+                                <strong>⚠️ Vigilancia:</strong> Contenido ofensivo será reportado y eliminado.
+                            </p>
+                            <p style={{ marginBottom: 'var(--space-xs)' }}>
+                                <strong style={{ color: 'var(--gold-darker)' }}>🔒 Ley Inmutable:</strong> Los Mandamientos del 8 en adelante son del Alto Consejo.
+                            </p>
+                            <p style={{
+                                textAlign: 'center',
+                                fontFamily: 'var(--font-medieval)',
+                                color: 'var(--gold-darker)',
+                                marginTop: 'var(--space-md)',
+                                marginBottom: 'var(--space-md)'
+                            }}>
+                                ✦ El Consejo observa. El Consejo honra. ✦
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={onContinue}
+                            style={{
+                                width: '100%',
+                                padding: 'var(--space-md)',
+                                background: 'linear-gradient(135deg, var(--gold-dark), var(--gold-darker))',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: 'var(--radius-md)',
+                                fontFamily: 'var(--font-medieval)',
+                                fontSize: '0.9rem',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)'
+                            }}
+                        >
+                            Continuar al Códice →
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // ================================
         // MAIN APP
         // ================================
         function App() {
             const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
+            const [hasReadInstructions, setHasReadInstructions] = useState(false);
             const [isOpen, setIsOpen] = useState(false);
             const [currentPage, setCurrentPage] = useState(1);
             const [hasSworn, setHasSworn] = useState(false);
@@ -3306,6 +3403,15 @@
             const [showPasswordModal, setShowPasswordModal] = useState(false);
             const [passwordCallback, setPasswordCallback] = useState(null);
             const [showInvitation, setShowInvitation] = useState(false);
+
+            // Check if mobile
+            const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+            useEffect(() => {
+                const handleResize = () => setIsMobile(window.innerWidth <= 768);
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
 
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
@@ -3490,6 +3596,11 @@
             // Show disclaimer first
             if (!hasAcceptedDisclaimer) {
                 return <DisclaimerModal onAccept={() => setHasAcceptedDisclaimer(true)} />;
+            }
+
+            // Show mobile instructions after disclaimer (only on mobile)
+            if (isMobile && !hasReadInstructions) {
+                return <MobileInstructionsModal onContinue={() => setHasReadInstructions(true)} />;
             }
 
             // If book is closed
