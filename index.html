@@ -1090,27 +1090,32 @@
                 right: -22px;
             }
 
-            /* Libro abierto */
+            /* Libro abierto - SOLUCIÓN MÓVIL */
             .book-open {
                 max-width: 100%;
-                aspect-ratio: auto;
-                flex-direction: column;
-                max-height: none;
-                min-height: 80vh;
+                width: 100%;
+                aspect-ratio: unset !important;
+                flex-direction: column !important;
+                max-height: none !important;
+                height: auto !important;
+                min-height: auto;
             }
 
+            /* Ocultar completamente la página izquierda */
             .book-page.left {
-                display: none;
+                display: none !important;
             }
 
             .book-page.right {
-                width: 100%;
-                min-height: 75vh;
+                width: 100% !important;
+                flex: none !important;
+                min-height: 70vh;
+                height: auto;
                 padding: var(--space-md);
             }
 
             .book-spine {
-                display: none;
+                display: none !important;
             }
 
             /* Navegación */
