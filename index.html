@@ -1370,6 +1370,53 @@
             }
         };
 
+        // ================================
+        // COUNTERS STORAGE (inicio en 452)
+        // ================================
+        const COUNTERS_STORAGE_KEY = 'codex_ursus_counters';
+        const COUNTER_BASE = 452;
+
+        const loadCounters = () => {
+            try {
+                const data = localStorage.getItem(COUNTERS_STORAGE_KEY);
+                if (data) {
+                    return JSON.parse(data);
+                }
+                // Inicializar contadores
+                const initial = { visits: COUNTER_BASE, savedPages: COUNTER_BASE };
+                localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(initial));
+                return initial;
+            } catch (e) {
+                return { visits: COUNTER_BASE, savedPages: COUNTER_BASE };
+            }
+        };
+
+        const incrementVisitCounter = () => {
+            try {
+                const counters = loadCounters();
+                counters.visits += 1;
+                localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(counters));
+                return counters.visits;
+            } catch (e) {
+                return COUNTER_BASE;
+            }
+        };
+
+        const incrementSavedPagesCounter = () => {
+            try {
+                const counters = loadCounters();
+                counters.savedPages += 1;
+                localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(counters));
+                return counters.savedPages;
+            } catch (e) {
+                return COUNTER_BASE;
+            }
+        };
+
+        const getCounters = () => {
+            return loadCounters();
+        };
+
         // Book Cover Component with Instructions
         function BookCover({ onOpen }) {
             const [reportPage, setReportPage] = useState('');
@@ -1661,6 +1708,49 @@
                             }}>
                                 Actualización de 2025
                             </p>
+                        </div>
+
+                        {/* Contadores */}
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '-50px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            display: 'flex',
+                            gap: 'var(--space-lg)',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <div style={{
+                                textAlign: 'center',
+                                color: 'var(--gold-light)',
+                                fontSize: '0.7rem',
+                                fontFamily: 'var(--font-medieval)'
+                            }}>
+                                <Icon name="eye" size={16} />
+                                <div style={{ marginTop: '4px' }}>
+                                    <span style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{getCounters().visits}</span>
+                                    <div style={{ opacity: 0.7 }}>Visitas</div>
+                                </div>
+                            </div>
+                            <div style={{
+                                width: '1px',
+                                height: '30px',
+                                background: 'var(--gold-dark)',
+                                opacity: 0.5
+                            }}></div>
+                            <div style={{
+                                textAlign: 'center',
+                                color: 'var(--gold-light)',
+                                fontSize: '0.7rem',
+                                fontFamily: 'var(--font-medieval)'
+                            }}>
+                                <Icon name="scroll-text" size={16} />
+                                <div style={{ marginTop: '4px' }}>
+                                    <span style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{getCounters().savedPages}</span>
+                                    <div style={{ opacity: 0.7 }}>Páginas Escritas</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -3433,6 +3523,15 @@
                 return () => window.removeEventListener('resize', handleResize);
             }, []);
 
+            // Increment visit counter on first load
+            useEffect(() => {
+                const hasVisited = sessionStorage.getItem('codex_visited');
+                if (!hasVisited) {
+                    incrementVisitCounter();
+                    sessionStorage.setItem('codex_visited', 'true');
+                }
+            }, []);
+
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
             const [showAdminMenu, setShowAdminMenu] = useState(false);
@@ -3509,6 +3608,9 @@
 
             // Save page data
             const handleSavePageData = useCallback((page, text, video, userName, photo) => {
+                // Check if this is a new page (not an update)
+                const isNewPage = !storedData.pages[page];
+
                 const newData = {
                     ...storedData,
                     pages: {
@@ -3518,6 +3620,11 @@
                 };
                 setStoredData(newData);
                 saveToStorage(newData);
+
+                // Increment saved pages counter only for new pages
+                if (isNewPage && text && text.trim()) {
+                    incrementSavedPagesCounter();
+                }
             }, [storedData]);
 
             // Add custom commandment
