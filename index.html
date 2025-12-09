@@ -1371,10 +1371,11 @@
         };
 
         // ================================
-        // COUNTERS STORAGE (inicio en 452)
+        // COUNTERS STORAGE
         // ================================
         const COUNTERS_STORAGE_KEY = 'codex_ursus_counters';
-        const COUNTER_BASE = 452;
+        const VISITS_BASE = 452;
+        const SAVED_PAGES_BASE = 11;
 
         const loadCounters = () => {
             try {
@@ -1383,11 +1384,11 @@
                     return JSON.parse(data);
                 }
                 // Inicializar contadores
-                const initial = { visits: COUNTER_BASE, savedPages: COUNTER_BASE };
+                const initial = { visits: VISITS_BASE, savedPages: SAVED_PAGES_BASE };
                 localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(initial));
                 return initial;
             } catch (e) {
-                return { visits: COUNTER_BASE, savedPages: COUNTER_BASE };
+                return { visits: VISITS_BASE, savedPages: SAVED_PAGES_BASE };
             }
         };
 
@@ -1398,7 +1399,7 @@
                 localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(counters));
                 return counters.visits;
             } catch (e) {
-                return COUNTER_BASE;
+                return VISITS_BASE;
             }
         };
 
@@ -1409,7 +1410,7 @@
                 localStorage.setItem(COUNTERS_STORAGE_KEY, JSON.stringify(counters));
                 return counters.savedPages;
             } catch (e) {
-                return COUNTER_BASE;
+                return SAVED_PAGES_BASE;
             }
         };
 
