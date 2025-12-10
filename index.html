@@ -3936,7 +3936,6 @@
             if (!isOpen) {
                 // Determine if we should auto-open (shared link and not started yet)
                 const shouldAutoOpen = sharedPageNumber && isViewingSharedPage && !sharedAnimationStarted;
-                console.log('BookCover render:', { shouldAutoOpen, sharedPageNumber, isViewingSharedPage, sharedAnimationStarted });
 
                 return (
                     <BookCover
