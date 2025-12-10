@@ -3715,33 +3715,22 @@
 
             // Effect to auto-open book for shared links after a delay
             useEffect(() => {
-                if (sharedPageNumber && hasAcceptedDisclaimer && isViewingSharedPage && !sharedAnimationStarted) {
-                    // Mark animation as started to prevent re-triggering
-                    setSharedAnimationStarted(true);
-
-                    // Show closed book for 2 seconds, then open
-                    const openTimer = setTimeout(() => {
-                        setIsOpen(true);
-                        setCurrentPage(1);
-
-                        // After opening, flip through pages with animation
-                        let targetPage = sharedPageNumber;
-                        let currentAnimPage = 1;
-
-                        const flipInterval = setInterval(() => {
-                            if (currentAnimPage < targetPage) {
-                                currentAnimPage++;
-                                setCurrentPage(currentAnimPage);
-                            } else {
-                                clearInterval(flipInterval);
-                                setShowWriteInvitationBanner(true);
-                            }
-                        }, 150); // Flip each page every 150ms
-
-                    }, 2000); // Wait 2 seconds showing closed book
-
-                    return () => clearTimeout(openTimer);
+                // Only run if all conditions met and animation hasn't started
+                if (!sharedPageNumber || !hasAcceptedDisclaimer || !isViewingSharedPage || sharedAnimationStarted) {
+                    return;
                 }
+
+                // Mark as started immediately
+                setSharedAnimationStarted(true);
+
+                // Show closed book for 2 seconds, then open to target page
+                const openTimer = setTimeout(() => {
+                    setIsOpen(true);
+                    setCurrentPage(sharedPageNumber);
+                    setShowWriteInvitationBanner(true);
+                }, 2000);
+
+                return () => clearTimeout(openTimer);
             }, [sharedPageNumber, hasAcceptedDisclaimer, isViewingSharedPage, sharedAnimationStarted]);
 
             // Admin states
