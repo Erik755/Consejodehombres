@@ -15,7 +15,28 @@
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAGzLYNyDJGmVIEnDYaCER71rR_LGyt574",
+            authDomain: "textos-sagrados.firebaseapp.com",
+            projectId: "textos-sagrados",
+            storageBucket: "textos-sagrados.firebasestorage.app",
+            messagingSenderId: "511517505140",
+            appId: "1:511517505140:web:ac299f0751802fbdf74321",
+            measurementId: "G-LN923PWMMM"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
     <!-- Google Fonts - Medieval Typography -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1325,11 +1346,12 @@
         };
 
         // ================================
-        // LOCAL STORAGE HELPERS
+        // FIREBASE FIRESTORE + LOCAL CACHE HELPERS
         // ================================
         const STORAGE_KEY = 'codex_ursus_data';
 
-        const saveToStorage = (data) => {
+        // Save to localStorage (local cache)
+        const saveToLocalCache = (data) => {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
             } catch (e) {
@@ -1337,15 +1359,83 @@
             }
         };
 
-        const loadFromStorage = () => {
+        // Load from localStorage (local cache)
+        const loadFromLocalCache = () => {
             try {
                 const data = localStorage.getItem(STORAGE_KEY);
-                return data ? JSON.parse(data) : { pages: {}, unlockedSlots: {} };
+                return data ? JSON.parse(data) : { pages: {}, unlockedSlots: {}, customCommandments: [] };
             } catch (e) {
                 console.warn('Could not load from localStorage:', e);
-                return { pages: {}, unlockedSlots: {} };
+                return { pages: {}, unlockedSlots: {}, customCommandments: [] };
             }
         };
+
+        // Save a page to Firestore
+        const savePageToFirestore = async (pageNumber, pageData) => {
+            try {
+                await db.collection('pages').doc(String(pageNumber)).set({
+                    ...pageData,
+                    pageNumber: pageNumber,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Page saved to Firestore:', pageNumber);
+            } catch (e) {
+                console.error('Error saving to Firestore:', e);
+            }
+        };
+
+        // Load all pages from Firestore
+        const loadAllPagesFromFirestore = async () => {
+            try {
+                const snapshot = await db.collection('pages').get();
+                const pages = {};
+                snapshot.forEach((doc) => {
+                    pages[doc.id] = doc.data();
+                });
+                return pages;
+            } catch (e) {
+                console.error('Error loading from Firestore:', e);
+                return {};
+            }
+        };
+
+        // Save custom commandments to Firestore
+        const saveCommandmentsToFirestore = async (commandments) => {
+            try {
+                await db.collection('settings').doc('commandments').set({
+                    list: commandments,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (e) {
+                console.error('Error saving commandments to Firestore:', e);
+            }
+        };
+
+        // Load custom commandments from Firestore
+        const loadCommandmentsFromFirestore = async () => {
+            try {
+                const doc = await db.collection('settings').doc('commandments').get();
+                if (doc.exists) {
+                    return doc.data().list || [];
+                }
+                return [];
+            } catch (e) {
+                console.error('Error loading commandments from Firestore:', e);
+                return [];
+            }
+        };
+
+        // Combined save function (to both localStorage and Firestore)
+        const saveToStorage = (data) => {
+            // Always save to local cache
+            saveToLocalCache(data);
+        };
+
+        // Combined load function (returns local cache, Firestore loads async)
+        const loadFromStorage = () => {
+            return loadFromLocalCache();
+        };
+
 
         // ================================
         // REPORTS STORAGE
@@ -3731,6 +3821,35 @@
             // Load data from localStorage
             const [storedData, setStoredData] = useState(() => loadFromStorage());
 
+            // Load data from Firestore on mount and merge with local cache
+            useEffect(() => {
+                const loadFirestoreData = async () => {
+                    try {
+                        // Load pages from Firestore
+                        const firestorePages = await loadAllPagesFromFirestore();
+
+                        // Load commandments from Firestore
+                        const firestoreCommandments = await loadCommandmentsFromFirestore();
+
+                        // Merge Firestore data with local cache (Firestore takes priority)
+                        setStoredData(prev => {
+                            const mergedData = {
+                                ...prev,
+                                pages: { ...prev.pages, ...firestorePages },
+                                customCommandments: firestoreCommandments.length > 0 ? firestoreCommandments : (prev.customCommandments || [])
+                            };
+                            // Update local cache with merged data
+                            saveToLocalCache(mergedData);
+                            return mergedData;
+                        });
+                        console.log('Loaded data from Firestore');
+                    } catch (e) {
+                        console.error('Error loading Firestore data:', e);
+                    }
+                };
+                loadFirestoreData();
+            }, []);
+
             // Función para encontrar la primera página vacía
             const findFirstEmptyPage = useCallback(() => {
                 // Las páginas de usuario empiezan en 12
@@ -3813,15 +3932,20 @@
                 // Check if this is a new page (not an update)
                 const isNewPage = !storedData.pages[page];
 
+                const pageData = { text, video: video || null, userName: userName || null, photo: photo || null };
+
                 const newData = {
                     ...storedData,
                     pages: {
                         ...storedData.pages,
-                        [page]: { text, video: video || null, userName: userName || null, photo: photo || null }
+                        [page]: pageData
                     }
                 };
                 setStoredData(newData);
                 saveToStorage(newData);
+
+                // Save to Firestore for cloud sharing
+                savePageToFirestore(page, pageData);
 
                 // Increment saved pages counter only for new pages
                 if (isNewPage && text && text.trim()) {
@@ -3829,15 +3953,21 @@
                 }
             }, [storedData]);
 
+
             // Add custom commandment
             const handleAddCommandment = useCallback((text) => {
+                const newCommandments = [...(storedData.customCommandments || []), text];
                 const newData = {
                     ...storedData,
-                    customCommandments: [...(storedData.customCommandments || []), text]
+                    customCommandments: newCommandments
                 };
                 setStoredData(newData);
                 saveToStorage(newData);
+
+                // Save to Firestore for cloud sharing
+                saveCommandmentsToFirestore(newCommandments);
             }, [storedData]);
+
 
             // Request password - takes callback to execute after success
             const handleRequestPassword = useCallback((callback) => {
