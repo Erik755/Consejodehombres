@@ -2446,10 +2446,11 @@
             };
 
             const shareTikTok = () => {
-                // TikTok no tiene API de compartir directo - abrimos para copiar
+                // TikTok no tiene API de compartir directo - abrimos búsqueda para que el usuario pegue
                 navigator.clipboard.writeText(shareMessage);
-                alert('¡Mensaje copiado! Pégalo en TikTok.');
-                window.open('https://www.tiktok.com/', '_blank');
+                // Usamos un alert más descriptivo o un modal si fuera posible, por ahora el alert estándar
+                alert('¡Mensaje copiado! Se abrirá TikTok en la búsqueda del "Consejo de hombres".\n\n1. Elige un video.\n2. Pega tu mensaje en los comentarios.');
+                window.open('https://www.tiktok.com/search?q=Consejo%20de%20hombres', '_blank');
             };
 
             const copyLink = () => {
@@ -4215,14 +4216,13 @@
                         <div
                             style={{
                                 position: 'fixed',
-                                top: isMobile && !showBannerLegend ? '80px' : '60px',
-                                bottom: 'auto',
-                                left: isMobile && !showBannerLegend ? 'auto' : '50%',
-                                right: isMobile && !showBannerLegend ? '10px' : 'auto',
-                                transform: isMobile && !showBannerLegend ? 'none' : 'translateX(-50%)',
+                                top: isMobile && !showBannerLegend ? 'auto' : '60px',
+                                bottom: isMobile && !showBannerLegend ? '90px' : 'auto',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
                                 background: 'linear-gradient(135deg, rgba(179, 135, 40, 0.95), rgba(149, 108, 44, 0.95))',
                                 color: 'white',
-                                padding: isMobile && !showBannerLegend ? 'var(--space-xs) var(--space-md)' : 'var(--space-sm) var(--space-lg)',
+                                padding: isMobile && !showBannerLegend ? '4px 8px' : 'var(--space-sm) var(--space-lg)',
                                 borderRadius: 'var(--radius-md)',
                                 border: '1px solid var(--gold-light)',
                                 fontFamily: 'var(--font-medieval)',
@@ -4251,11 +4251,11 @@
                                     background: 'rgba(255, 255, 255, 0.2)',
                                     color: 'white',
                                     border: '1px solid rgba(255, 255, 255, 0.5)',
-                                    padding: 'var(--space-xs) var(--space-md)',
+                                    padding: isMobile && !showBannerLegend ? '2px 6px' : 'var(--space-xs) var(--space-md)',
                                     borderRadius: 'var(--radius-sm)',
                                     cursor: 'pointer',
                                     fontFamily: 'var(--font-medieval)',
-                                    fontSize: '0.8rem',
+                                    fontSize: isMobile && !showBannerLegend ? '0.7rem' : '0.8rem',
                                     transition: 'background 0.2s'
                                 }}
                             >
