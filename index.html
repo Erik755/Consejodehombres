@@ -3712,6 +3712,34 @@
                 }
             }, []);
 
+            // Effect to auto-open book for shared links after a delay
+            useEffect(() => {
+                if (sharedPageNumber && hasAcceptedDisclaimer && !isOpen && isViewingSharedPage) {
+                    // Show closed book for 2 seconds, then open
+                    const openTimer = setTimeout(() => {
+                        setIsOpen(true);
+                        setCurrentPage(1);
+
+                        // After opening, flip through pages with animation
+                        let targetPage = sharedPageNumber;
+                        let currentAnimPage = 1;
+
+                        const flipInterval = setInterval(() => {
+                            if (currentAnimPage < targetPage) {
+                                currentAnimPage++;
+                                setCurrentPage(currentAnimPage);
+                            } else {
+                                clearInterval(flipInterval);
+                                setShowWriteInvitationBanner(true);
+                            }
+                        }, 150); // Flip each page every 150ms
+
+                    }, 2000); // Wait 2 seconds showing closed book
+
+                    return () => clearTimeout(openTimer);
+                }
+            }, [sharedPageNumber, hasAcceptedDisclaimer, isOpen, isViewingSharedPage]);
+
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
             const [showAdminMenu, setShowAdminMenu] = useState(false);
@@ -3909,34 +3937,6 @@
             if (isMobile && !hasReadInstructions && !sharedPageNumber) {
                 return <MobileInstructionsModal onContinue={() => setHasReadInstructions(true)} />;
             }
-
-            // Effect to auto-open book for shared links after a delay
-            useEffect(() => {
-                if (sharedPageNumber && hasAcceptedDisclaimer && !isOpen && isViewingSharedPage) {
-                    // Show closed book for 2 seconds, then open
-                    const openTimer = setTimeout(() => {
-                        setIsOpen(true);
-                        setCurrentPage(1);
-
-                        // After opening, flip through pages with animation
-                        let targetPage = sharedPageNumber;
-                        let currentAnimPage = 1;
-
-                        const flipInterval = setInterval(() => {
-                            if (currentAnimPage < targetPage) {
-                                currentAnimPage++;
-                                setCurrentPage(currentAnimPage);
-                            } else {
-                                clearInterval(flipInterval);
-                                setShowWriteInvitationBanner(true);
-                            }
-                        }, 150); // Flip each page every 150ms
-
-                    }, 2000); // Wait 2 seconds showing closed book
-
-                    return () => clearTimeout(openTimer);
-                }
-            }, [sharedPageNumber, hasAcceptedDisclaimer, isOpen, isViewingSharedPage]);
 
             // If book is closed (including when viewing shared page initially)
             if (!isOpen) {
