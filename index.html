@@ -1430,17 +1430,11 @@
             // Auto-open effect - if autoOpen prop is true, open after delay
             // Using useLayoutEffect for synchronous execution
             React.useLayoutEffect(() => {
-                console.log('BookCover useLayoutEffect running:', { autoOpen, autoOpenDelay, hasOnOpen: typeof onOpen === 'function' });
                 if (autoOpen && typeof onOpen === 'function') {
-                    console.log('Auto-open condition met, setting timer for', autoOpenDelay, 'ms');
                     const timer = window.setTimeout(() => {
-                        console.log('Timer fired, calling onOpen now');
                         onOpen();
                     }, autoOpenDelay);
-                    return () => {
-                        console.log('Cleanup: clearing timer');
-                        window.clearTimeout(timer);
-                    };
+                    return () => window.clearTimeout(timer);
                 }
             }, [autoOpen, autoOpenDelay, onOpen]);
 
