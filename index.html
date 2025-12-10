@@ -3782,6 +3782,8 @@
             const [showWriteInvitationBanner, setShowWriteInvitationBanner] = useState(false);
             const [isViewingSharedPage, setIsViewingSharedPage] = useState(false);
             const [sharedAnimationStarted, setSharedAnimationStarted] = useState(false);
+            const [showBannerLegend, setShowBannerLegend] = useState(true); // For mobile: hide legend after 3 seconds
+
 
             // Check URL for shared page parameter on mount
             useEffect(() => {
@@ -3814,7 +3816,19 @@
                 }
             }, []);
 
+            // Hide banner legend after 3 seconds on mobile
+            useEffect(() => {
+                if (showWriteInvitationBanner && isMobile) {
+                    setShowBannerLegend(true); // Reset to show initially
+                    const timer = setTimeout(() => {
+                        setShowBannerLegend(false);
+                    }, 3000);
+                    return () => clearTimeout(timer);
+                }
+            }, [showWriteInvitationBanner, isMobile]);
+
             // Admin states
+
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
             const [showAdminMenu, setShowAdminMenu] = useState(false);
 
@@ -4201,12 +4215,13 @@
                         <div
                             style={{
                                 position: 'fixed',
-                                top: '60px',
+                                top: isMobile && !showBannerLegend ? 'auto' : '60px',
+                                bottom: isMobile && !showBannerLegend ? '140px' : 'auto',
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 background: 'linear-gradient(135deg, rgba(179, 135, 40, 0.95), rgba(149, 108, 44, 0.95))',
                                 color: 'white',
-                                padding: 'var(--space-sm) var(--space-lg)',
+                                padding: isMobile && !showBannerLegend ? 'var(--space-xs) var(--space-md)' : 'var(--space-sm) var(--space-lg)',
                                 borderRadius: 'var(--radius-md)',
                                 border: '1px solid var(--gold-light)',
                                 fontFamily: 'var(--font-medieval)',
@@ -4217,10 +4232,14 @@
                                 maxWidth: '90%',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: 'var(--space-xs)'
+                                gap: 'var(--space-xs)',
+                                transition: 'all 0.3s ease'
                             }}
                         >
-                            <span>📜 Si deseas escribir, debes leer los mandamientos y aceptarlos</span>
+                            {/* Show legend only if not on mobile or showBannerLegend is true */}
+                            {(!isMobile || showBannerLegend) && (
+                                <span>📜 Si deseas escribir, debes leer los mandamientos y aceptarlos</span>
+                            )}
                             <button
                                 onClick={() => {
                                     setCurrentPage(1);
@@ -4243,6 +4262,7 @@
                             </button>
                         </div>
                     )}
+
 
                     {showPasswordModal && (
                         <PasswordModal
