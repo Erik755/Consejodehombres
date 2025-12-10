@@ -1419,13 +1419,23 @@
         };
 
         // Book Cover Component with Instructions
-        function BookCover({ onOpen }) {
+        function BookCover({ onOpen, autoOpen = false, autoOpenDelay = 2000 }) {
             const [reportPage, setReportPage] = useState('');
             const [showReportModal, setShowReportModal] = useState(false);
             const [reportPassword, setReportPassword] = useState('');
             const [reportError, setReportError] = useState(false);
             const [reports, setReports] = useState(() => loadReports());
             const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+            // Auto-open effect - if autoOpen prop is true, open after delay
+            useEffect(() => {
+                if (autoOpen) {
+                    const timer = setTimeout(() => {
+                        onOpen();
+                    }, autoOpenDelay);
+                    return () => clearTimeout(timer);
+                }
+            }, [autoOpen, autoOpenDelay, onOpen]);
 
             const handleSubmitReport = () => {
                 if (reportPage.trim() && parseInt(reportPage) >= 12) {
@@ -3713,39 +3723,6 @@
                 }
             }, []);
 
-            // Effect to auto-open book for shared links after a delay
-            useEffect(() => {
-                // Early return conditions - check each one
-                if (!hasAcceptedDisclaimer) {
-                    // Disclaimer not accepted yet - wait
-                    return;
-                }
-                if (!sharedPageNumber) {
-                    // No shared page in URL
-                    return;
-                }
-                if (!isViewingSharedPage) {
-                    // Not viewing shared page
-                    return;
-                }
-                if (sharedAnimationStarted) {
-                    // Animation already started
-                    return;
-                }
-
-                // All conditions met - start animation
-                setSharedAnimationStarted(true);
-
-                // Show closed book for 2 seconds, then open to target page
-                const openTimer = setTimeout(() => {
-                    setIsOpen(true);
-                    setCurrentPage(sharedPageNumber);
-                    setShowWriteInvitationBanner(true);
-                }, 2000);
-
-                return () => clearTimeout(openTimer);
-            }, [sharedPageNumber, hasAcceptedDisclaimer, isViewingSharedPage, sharedAnimationStarted]);
-
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
             const [showAdminMenu, setShowAdminMenu] = useState(false);
@@ -3769,6 +3746,16 @@
                 setHasSworn(false);
                 setIsOpen(true);
             }, []);
+
+            // Función para abrir libro desde enlace compartido (abre directamente en página compartida)
+            const handleSharedPageOpen = useCallback(() => {
+                if (sharedPageNumber) {
+                    setCurrentPage(sharedPageNumber);
+                    setIsOpen(true);
+                    setShowWriteInvitationBanner(true);
+                    setSharedAnimationStarted(true);
+                }
+            }, [sharedPageNumber]);
 
             // Función cuando el usuario acepta los mandamientos
             const handleSwear = useCallback(() => {
@@ -3946,7 +3933,16 @@
 
             // If book is closed (including when viewing shared page initially)
             if (!isOpen) {
-                return <BookCover onOpen={handleOpenBook} />;
+                // Determine if we should auto-open (shared link and not started yet)
+                const shouldAutoOpen = sharedPageNumber && isViewingSharedPage && !sharedAnimationStarted;
+
+                return (
+                    <BookCover
+                        onOpen={shouldAutoOpen ? handleSharedPageOpen : handleOpenBook}
+                        autoOpen={shouldAutoOpen}
+                        autoOpenDelay={2000}
+                    />
+                );
             }
 
             // Book is open
