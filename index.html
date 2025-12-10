@@ -1419,7 +1419,7 @@
         };
 
         // Book Cover Component with Instructions
-        function BookCover({ onOpen, autoOpen = false, autoOpenDelay = 2000 }) {
+        function BookCover({ onOpen, autoOpen = false, autoOpenDelay = 2000, targetPage = null }) {
             const [reportPage, setReportPage] = useState('');
             const [showReportModal, setShowReportModal] = useState(false);
             const [reportPassword, setReportPassword] = useState('');
@@ -1430,13 +1430,13 @@
             // Auto-open effect - if autoOpen prop is true, open after delay
             // Using useLayoutEffect for synchronous execution
             React.useLayoutEffect(() => {
-                if (autoOpen && typeof onOpen === 'function') {
+                if (autoOpen && typeof onOpen === 'function' && targetPage) {
                     const timer = window.setTimeout(() => {
-                        onOpen();
+                        onOpen(targetPage);
                     }, autoOpenDelay);
                     return () => window.clearTimeout(timer);
                 }
-            }, [autoOpen, autoOpenDelay, onOpen]);
+            }, [autoOpen, autoOpenDelay, onOpen, targetPage]);
 
             const handleSubmitReport = () => {
                 if (reportPage.trim() && parseInt(reportPage) >= 12) {
@@ -3749,14 +3749,14 @@
             }, []);
 
             // Función para abrir libro desde enlace compartido (abre directamente en página compartida)
-            const handleSharedPageOpen = useCallback(() => {
-                if (sharedPageNumber) {
-                    setCurrentPage(sharedPageNumber);
+            const handleSharedPageOpen = useCallback((pageNum) => {
+                if (pageNum) {
+                    setCurrentPage(pageNum);
                     setIsOpen(true);
                     setShowWriteInvitationBanner(true);
                     setSharedAnimationStarted(true);
                 }
-            }, [sharedPageNumber]);
+            }, []);
 
             // Función cuando el usuario acepta los mandamientos
             const handleSwear = useCallback(() => {
@@ -3942,6 +3942,7 @@
                         onOpen={shouldAutoOpen ? handleSharedPageOpen : handleOpenBook}
                         autoOpen={shouldAutoOpen}
                         autoOpenDelay={2000}
+                        targetPage={sharedPageNumber}
                     />
                 );
             }
