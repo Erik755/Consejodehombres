@@ -3680,6 +3680,7 @@
             const [sharedPageNumber, setSharedPageNumber] = useState(null);
             const [showWriteInvitationBanner, setShowWriteInvitationBanner] = useState(false);
             const [isViewingSharedPage, setIsViewingSharedPage] = useState(false);
+            const [sharedAnimationStarted, setSharedAnimationStarted] = useState(false);
 
             // Check URL for shared page parameter on mount
             useEffect(() => {
@@ -3714,7 +3715,10 @@
 
             // Effect to auto-open book for shared links after a delay
             useEffect(() => {
-                if (sharedPageNumber && hasAcceptedDisclaimer && !isOpen && isViewingSharedPage) {
+                if (sharedPageNumber && hasAcceptedDisclaimer && isViewingSharedPage && !sharedAnimationStarted) {
+                    // Mark animation as started to prevent re-triggering
+                    setSharedAnimationStarted(true);
+
                     // Show closed book for 2 seconds, then open
                     const openTimer = setTimeout(() => {
                         setIsOpen(true);
@@ -3738,7 +3742,7 @@
 
                     return () => clearTimeout(openTimer);
                 }
-            }, [sharedPageNumber, hasAcceptedDisclaimer, isOpen, isViewingSharedPage]);
+            }, [sharedPageNumber, hasAcceptedDisclaimer, isViewingSharedPage, sharedAnimationStarted]);
 
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
