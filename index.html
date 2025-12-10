@@ -3715,23 +3715,40 @@
 
             // Effect to auto-open book for shared links after a delay
             useEffect(() => {
+                console.log('Shared link effect check:', {
+                    sharedPageNumber,
+                    hasAcceptedDisclaimer,
+                    isViewingSharedPage,
+                    sharedAnimationStarted,
+                    isMobile,
+                    hasReadInstructions
+                });
+
                 // Only run if all conditions met and animation hasn't started
                 if (!sharedPageNumber || !hasAcceptedDisclaimer || !isViewingSharedPage || sharedAnimationStarted) {
+                    console.log('Shared link effect - early return', {
+                        reason: !sharedPageNumber ? 'no sharedPageNumber' :
+                            !hasAcceptedDisclaimer ? 'disclaimer not accepted' :
+                                !isViewingSharedPage ? 'not viewing shared page' :
+                                    'animation already started'
+                    });
                     return;
                 }
 
+                console.log('Starting shared link animation!');
                 // Mark as started immediately
                 setSharedAnimationStarted(true);
 
                 // Show closed book for 2 seconds, then open to target page
                 const openTimer = setTimeout(() => {
+                    console.log('Timer fired - opening book to page:', sharedPageNumber);
                     setIsOpen(true);
                     setCurrentPage(sharedPageNumber);
                     setShowWriteInvitationBanner(true);
                 }, 2000);
 
                 return () => clearTimeout(openTimer);
-            }, [sharedPageNumber, hasAcceptedDisclaimer, isViewingSharedPage, sharedAnimationStarted]);
+            }, [sharedPageNumber, hasAcceptedDisclaimer, isViewingSharedPage, sharedAnimationStarted, isMobile, hasReadInstructions]);
 
             // Admin states
             const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
