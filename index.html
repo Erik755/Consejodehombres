@@ -2318,6 +2318,33 @@
         function PageUser({ pageNumber, userData, onSave }) {
             const pageData = userData[pageNumber];
 
+            // Función para generar URL de compartir
+            const getShareUrl = () => {
+                const baseUrl = 'https://erik755.github.io/Consejodehombres/';
+                return `${baseUrl}?page=${pageNumber}`;
+            };
+
+            // Mensaje de compartir
+            const shareMessage = `Yo he agregado este decreto a los sagrados escritos del Consejo de Hombres. Agrega el tuyo en esta dirección: ${getShareUrl()}`;
+
+            // Funciones de compartir
+            const shareWhatsApp = () => {
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage)}`, '_blank');
+            };
+
+            const shareFacebook = () => {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}&quote=${encodeURIComponent(shareMessage)}`, '_blank');
+            };
+
+            const shareTwitter = () => {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`, '_blank');
+            };
+
+            const copyLink = () => {
+                navigator.clipboard.writeText(shareMessage);
+                alert('¡Enlace copiado! Compártelo donde quieras.');
+            };
+
             return (
                 <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
                     <div style={{ textAlign: 'center' }}>
@@ -2341,7 +2368,103 @@
                     </div>
 
                     {pageData ? (
-                        <PageUserContent data={pageData} />
+                        <>
+                            <PageUserContent data={pageData} />
+
+                            {/* Botones de compartir */}
+                            <div style={{
+                                marginTop: 'var(--space-md)',
+                                padding: 'var(--space-md)',
+                                background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(62, 39, 35, 0.1))',
+                                borderRadius: 'var(--radius-md)',
+                                border: '1px solid var(--gold-dark)',
+                                textAlign: 'center'
+                            }}>
+                                <p style={{
+                                    fontFamily: 'var(--font-medieval)',
+                                    fontSize: '0.85rem',
+                                    color: 'var(--brown-medium)',
+                                    marginBottom: 'var(--space-sm)'
+                                }}>
+                                    📜 Comparte tu legado con el mundo
+                                </p>
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    gap: 'var(--space-sm)',
+                                    flexWrap: 'wrap'
+                                }}>
+                                    <button
+                                        onClick={shareWhatsApp}
+                                        style={{
+                                            padding: 'var(--space-sm) var(--space-md)',
+                                            background: '#25D366',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-sm)',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        <Icon name="message-circle" size={14} /> WhatsApp
+                                    </button>
+                                    <button
+                                        onClick={shareFacebook}
+                                        style={{
+                                            padding: 'var(--space-sm) var(--space-md)',
+                                            background: '#1877F2',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-sm)',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        <Icon name="facebook" size={14} /> Facebook
+                                    </button>
+                                    <button
+                                        onClick={shareTwitter}
+                                        style={{
+                                            padding: 'var(--space-sm) var(--space-md)',
+                                            background: '#1DA1F2',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-sm)',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        <Icon name="twitter" size={14} /> X
+                                    </button>
+                                    <button
+                                        onClick={copyLink}
+                                        style={{
+                                            padding: 'var(--space-sm) var(--space-md)',
+                                            background: 'var(--gold-dark)',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-sm)',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        <Icon name="copy" size={14} /> Copiar
+                                    </button>
+                                </div>
+                            </div>
+                        </>
                     ) : (
                         <PageEditor pageNum={pageNumber} onSave={onSave} />
                     )}
@@ -3515,6 +3638,24 @@
             const [passwordCallback, setPasswordCallback] = useState(null);
             const [showInvitation, setShowInvitation] = useState(false);
 
+            // Deep linking states
+            const [sharedPageNumber, setSharedPageNumber] = useState(null);
+            const [showWriteInvitationBanner, setShowWriteInvitationBanner] = useState(false);
+            const [isViewingSharedPage, setIsViewingSharedPage] = useState(false);
+
+            // Check URL for shared page parameter on mount
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const pageParam = urlParams.get('page');
+                if (pageParam) {
+                    const pageNum = parseInt(pageParam);
+                    if (!isNaN(pageNum) && pageNum >= 12) {
+                        setSharedPageNumber(pageNum);
+                        setIsViewingSharedPage(true);
+                    }
+                }
+            }, []);
+
             // Check if mobile
             const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -3726,9 +3867,18 @@
                 return <DisclaimerModal onAccept={() => setHasAcceptedDisclaimer(true)} />;
             }
 
-            // Show mobile instructions after disclaimer (only on mobile)
-            if (isMobile && !hasReadInstructions) {
+            // Show mobile instructions after disclaimer (only on mobile, and NOT if coming from shared link)
+            if (isMobile && !hasReadInstructions && !sharedPageNumber) {
                 return <MobileInstructionsModal onContinue={() => setHasReadInstructions(true)} />;
+            }
+
+            // If coming from shared link - go directly to book open with shared page
+            if (sharedPageNumber && !isOpen && isViewingSharedPage) {
+                // Auto-open book to shared page
+                setIsOpen(true);
+                setCurrentPage(sharedPageNumber);
+                setShowWriteInvitationBanner(true);
+                return null;
             }
 
             // If book is closed
@@ -3852,6 +4002,54 @@
                             }}
                         >
                             ✨ Te invitamos a leer la sabiduría de tus hermanos ✨
+                        </div>
+                    )}
+
+                    {/* Banner de invitación a escribir - para visitantes de enlaces compartidos */}
+                    {showWriteInvitationBanner && !hasSworn && (
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: '60px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                background: 'linear-gradient(135deg, rgba(179, 135, 40, 0.95), rgba(149, 108, 44, 0.95))',
+                                color: 'white',
+                                padding: 'var(--space-sm) var(--space-lg)',
+                                borderRadius: 'var(--radius-md)',
+                                border: '1px solid var(--gold-light)',
+                                fontFamily: 'var(--font-medieval)',
+                                fontSize: '0.85rem',
+                                textAlign: 'center',
+                                zIndex: 100,
+                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+                                maxWidth: '90%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 'var(--space-xs)'
+                            }}
+                        >
+                            <span>📜 Si deseas escribir, debes leer los mandamientos y aceptarlos</span>
+                            <button
+                                onClick={() => {
+                                    setCurrentPage(1);
+                                    setShowWriteInvitationBanner(false);
+                                    setIsViewingSharedPage(false);
+                                }}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    color: 'white',
+                                    border: '1px solid rgba(255, 255, 255, 0.5)',
+                                    padding: 'var(--space-xs) var(--space-md)',
+                                    borderRadius: 'var(--radius-sm)',
+                                    cursor: 'pointer',
+                                    fontFamily: 'var(--font-medieval)',
+                                    fontSize: '0.8rem',
+                                    transition: 'background 0.2s'
+                                }}
+                            >
+                                📖 Ir a los Mandamientos
+                            </button>
                         </div>
                     )}
 
