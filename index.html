@@ -2278,17 +2278,21 @@
 
                     <div style={{
                         background: 'white',
-                        padding: 'var(--space-xl)',
+                        padding: 'var(--space-lg)',
                         borderRadius: 'var(--radius-md)',
                         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                        border: '1px solid rgba(212, 175, 55, 0.2)'
+                        border: '1px solid rgba(212, 175, 55, 0.2)',
+                        maxHeight: '50vh',
+                        overflow: 'hidden'
                     }}>
                         <p style={{
                             fontFamily: 'var(--font-body)',
-                            fontSize: '1.2rem',
+                            fontSize: data.text.length > 500 ? '0.85rem' :
+                                data.text.length > 300 ? '0.95rem' :
+                                    data.text.length > 150 ? '1.05rem' : '1.15rem',
                             color: 'var(--brown-dark)',
                             whiteSpace: 'pre-wrap',
-                            lineHeight: 1.8
+                            lineHeight: data.text.length > 300 ? 1.5 : 1.7
                         }}>
                             {data.text}
                         </p>
