@@ -4215,10 +4215,11 @@
                         <div
                             style={{
                                 position: 'fixed',
-                                top: isMobile && !showBannerLegend ? 'auto' : '60px',
-                                bottom: isMobile && !showBannerLegend ? '140px' : 'auto',
-                                left: '50%',
-                                transform: 'translateX(-50%)',
+                                top: isMobile && !showBannerLegend ? '80px' : '60px',
+                                bottom: 'auto',
+                                left: isMobile && !showBannerLegend ? 'auto' : '50%',
+                                right: isMobile && !showBannerLegend ? '10px' : 'auto',
+                                transform: isMobile && !showBannerLegend ? 'none' : 'translateX(-50%)',
                                 background: 'linear-gradient(135deg, rgba(179, 135, 40, 0.95), rgba(149, 108, 44, 0.95))',
                                 color: 'white',
                                 padding: isMobile && !showBannerLegend ? 'var(--space-xs) var(--space-md)' : 'var(--space-sm) var(--space-lg)',
