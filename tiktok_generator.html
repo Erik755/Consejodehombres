@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oráculo de Oci | Generador de TikTok</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=MedievalSharp&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind (Optional for layout, but using custom CSS for specifics) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --gold-light: #fbf5b7;
+            --gold-primary: #d4af37;
+            --gold-dark: #b38728;
+            --cream: #fdfbf7;
+            --brown-dark: #3e2723;
+            --brown-medium: #5d4037;
+            --background: #0f0f0f;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--cream);
+            font-family: 'EB Garamond', serif;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(62, 39, 35, 0.4) 0%, transparent 40%);
+        }
+
+        .gold-border {
+            border: 2px solid var(--gold-dark);
+            border-image: linear-gradient(to bottom, var(--gold-light), var(--gold-primary), var(--gold-dark)) 1;
+        }
+
+        .medieval-font {
+            font-family: 'MedievalSharp', cursive;
+        }
+
+        .display-font {
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(30, 20, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(212, 175, 55, 0.05);
+        }
+
+        .chat-bubble-user {
+            background: linear-gradient(135deg, var(--brown-medium), var(--brown-dark));
+            border-left: 2px solid var(--gold-primary);
+        }
+
+        .chat-bubble-ai {
+            background: rgba(0, 0, 0, 0.4);
+            border-right: 2px solid var(--gold-primary);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: var(--brown-dark);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* Loading Animation */
+        .loader-rune {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--gold-dark);
+            border-top-color: var(--gold-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center p-4">
+
+    <div
+        class="glass-panel w-full max-w-4xl rounded-xl overflow-hidden flex flex-col md:flex-row h-[85vh] gold-border relative">
+
+        <!-- Sidebar / Config -->
+        <div class="w-full md:w-1/3 bg-black/40 p-6 border-r border-[#d4af37]/30 flex flex-col pt-10">
+            <h1 class="display-font text-3xl text-[#d4af37] text-center mb-2 drop-shadow-md">Oráculo de Oci</h1>
+            <p class="text-center text-[#fbf5b7]/60 text-sm mb-8 italic">"Donde la sabiduría antigua encuentra las
+                tendencias modernas."</p>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block medieval-font text-[#d4af37] mb-2 text-lg">Modo del Agente</label>
+                    <select id="agentMode"
+                        class="w-full bg-[#1e140f] border border-[#d4af37]/50 p-3 rounded text-[#fdfbf7] focus:outline-none focus:border-[#d4af37]">
+                        <option value="research_script">Investigar & Redactar</option>
+                        <option value="script_only">Solo Redactar</option>
+                        <option value="chat">Charla Libre</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block medieval-font text-[#d4af37] mb-2 text-lg">Estado de la Red</label>
+                    <div
+                        class="flex items-center gap-2 text-sm text-green-400 bg-green-900/20 p-2 rounded border border-green-800/50">
+                        <i data-lucide="wifi" class="w-4 h-4"></i>
+                        <span>Sistema n8n: Activo</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-[#d4af37]/20">
+                    <p class="text-xs text-gray-500 mb-2">Endpoint Webhook:</p>
+                    <input type="password" id="webhookUrl" placeholder="https://tu-n8n.com/webhook/..."
+                        class="w-full bg-black/50 border border-gray-700 rounded p-2 text-xs text-gray-400 mb-2">
+                    <p class="text-[10px] text-gray-600 italic">*Configura tu URL de n8n aquí para conectar.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="flex-1 flex flex-col bg-gradient-to-br from-[#1a100c] to-[#0f0f0f] relative">
+
+            <!-- Chat Window -->
+            <div id="chatWindow"
+                class="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-[#d4af37]/20">
+
+                <!-- Welcome Message -->
+                <div class="flex flex-col items-start max-w-[80%]">
+                    <div class="flex items-center gap-2 mb-1 pl-1">
+                        <span class="text-[#d4af37] text-xs font-bold uppercase tracking-wider">Oci el Oso</span>
+                    </div>
+                    <div class="chat-bubble-ai p-4 rounded-2xl rounded-tl-sm text-lg leading-relaxed shadow-lg">
+                        <p>Saludos. Soy Oci. 🐻📜</p>
+                        <p class="mt-2">¿Sobre qué tema deseas que investigue y redacte hoy? Estoy conectado a la red de
+                            conocimiento (Perplexity) y a los archivos sagrados (Airtable).</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-black/40 border-t border-[#d4af37]/30">
+                <div class="relative flex items-end gap-2">
+                    <div
+                        class="flex-1 bg-[#1e140f] border border-[#d4af37]/40 rounded-xl overflow-hidden focus-within:border-[#d4af37] focus-within:shadow-[0_0_15px_rgba(212,175,55,0.1)] transition-all">
+                        <textarea id="userInput" rows="1"
+                            class="w-full bg-transparent text-[#fdfbf7] p-4 text-lg focus:outline-none resize-none max-h-32"
+                            placeholder="Escribe tu idea aquí (ej: 'Video sobre Estoicismo Moderno')..."
+                            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                    </div>
+                    <button id="sendBtn" onclick="sendMessage()"
+                        class="btn-gold p-4 rounded-xl flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i data-lucide="send" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="text-[10px] text-[#d4af37]/40 uppercase tracking-widest">Powered by Google Gemini &
+                        n8n</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const chatWindow = document.getElementById('chatWindow');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const webhookInput = document.getElementById('webhookUrl');
+
+        // Allow sending with Enter (Shift+Enter for newline)
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function appendMessage(text, isUser) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[85%] ${isUser ? 'ml-auto' : ''} animate-fade-in`;
+
+            const header = document.createElement('div');
+            header.className = `flex items-center gap-2 mb-1 ${isUser ? 'pr-1 justify-end' : 'pl-1'}`;
+            header.innerHTML = isUser
+                ? `<span class="text-[#b38728] text-xs font-bold uppercase tracking-wider">Tú</span>`
+                : `<span class="text-[#d4af37] text-xs font-bold uppercase tracking-wider">Oci el Oso</span>`;
+
+            const bubble = document.createElement('div');
+            bubble.className = isUser
+                ? 'chat-bubble-user p-4 rounded-2xl rounded-tr-sm text-lg leading-relaxed shadow-lg text-white'
+                : 'chat-bubble-ai p-4 rounded-2xl rounded-tl-sm text-lg leading-relaxed shadow-lg text-[#fdfbf7]';
+
+            // Format MD-like simple formatting
+            bubble.innerHTML = text.replace(/\n/g, '<br>');
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(bubble);
+            chatWindow.appendChild(wrapper);
+
+            // Scroll to bottom
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function appendLoader() {
+            const loaderId = 'loader-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.id = loaderId;
+            wrapper.className = 'flex flex-col items-start max-w-[80%]';
+            wrapper.innerHTML = `
+                <div class="flex items-center gap-2 mb-1 pl-1">
+                    <span class="text-[#d4af37] text-xs font-bold uppercase tracking-wider">Investigando...</span>
+                </div>
+                <div class="chat-bubble-ai p-4 rounded-2xl rounded-tl-sm shadow-lg flex items-center gap-3">
+                    <div class="loader-rune"></div>
+                    <span class="text-sm text-gray-400 italic">Consultando archivos...</span>
+                </div>
+            `;
+            chatWindow.appendChild(wrapper);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            return loaderId;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            const url = webhookInput.value.trim();
+
+            if (!text) return;
+
+            // UI Updates
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            appendMessage(text, true);
+
+            // Simulation Mode if no URL
+            if (!url) {
+                const loaderId = appendLoader();
+                setTimeout(() => {
+                    document.getElementById(loaderId).remove();
+                    appendMessage("⚠️ **Modo Simulación**: No has configurado la URL del Webhook.\n\nPara conectar con tu agente n8n real:\n1. Copia tu Webhook URL de n8n.\n2. Pégalo en el panel izquierdo.\n\nSimulando respuesta...\n\n---\n\n✅ He investigado sobre '" + text + "'.\n\n**Guion Propuesto:**\n¡Hola osos! 🐻 ¿Sabían esto?...\n\n(Este es un mensaje de prueba)", false);
+                }, 2000);
+                return;
+            }
+
+            // Real Request
+            const loaderId = appendLoader();
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chatInput: text })
+                });
+
+                document.getElementById(loaderId).remove();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Assumes n8n returns { output: "text" } or similar. Adjust based on real n8n agent output.
+                    const outputText = data.output || data.text || JSON.stringify(data);
+                    appendMessage(outputText, false);
+                } else {
+                    appendMessage("❌ Error al conectar con el Oráculo (n8n). Código: " + response.status, false);
+                }
+            } catch (error) {
+                document.getElementById(loaderId).remove();
+                appendMessage("❌ Error de conexión: " + error.message, false);
+            }
+        }
+    </script>
+</body>
+
+</html>
